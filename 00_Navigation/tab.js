@@ -35,7 +35,7 @@ export default function Tabs() {
             </View>
           ),
           tabBarActiveTintColor: "skyblue",
-          tabBarInactiveTintColor: "#ffffff",
+          tabBarInactiveTintColor: "#3bfa88ff",
           tabBarLabelStyle: {
             fontFamily: "Georgia",
             fontWeight: '300',
@@ -71,7 +71,7 @@ export default function Tabs() {
           headerStyle: {
             backgroundColor: "#383B73",
             height: 124,
-            paddingTop: 20, // Header background color
+            // paddingTop: 20, // Header background color
             borderRadius: 12,
           },
           headerTitleStyle: {
@@ -82,7 +82,7 @@ export default function Tabs() {
           headerTitleContainerStyle: {
           paddingLeft: 16, // Add padding to the left of the title
           paddingRight: 16, // Add padding to the right of the title
-          paddingTop: 20,
+          // paddingTop: 20,
           paddingBottom: 20, // Add padding to the bottom of the title
           },
         }}
