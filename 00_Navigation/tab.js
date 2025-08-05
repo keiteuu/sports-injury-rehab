@@ -1,113 +1,173 @@
+import React, { useRef, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, StyleSheet, Animated, Text, Image } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
-import { createStackNavigator } from "@react-navigation/stack";
+import { View, Image, StyleSheet, Animated } from "react-native";
 import Home from "../01_Screens/Home";
 import Disrecovery from "../01_Screens/Disrecovery";
 import Profile from "../01_Screens/Profile";
 
-
-const HomeStack = createStackNavigator();
-function HomeStackScreen() {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={Home} />
-      <HomeStack.Screen name="Disrecovery" component={Disrecovery} />
-      <HomeStack.Screen name="Profile" component={Profile} />
-    </HomeStack.Navigator>
-  );
-}
-
 const Tab = createBottomTabNavigator();
+
+const TabIcon = ({ focused, onIcon, offIcon }) => {
+  const bounceValue = useRef(new Animated.Value(1)).current; // for scale
+  const translateY = useRef(new Animated.Value(0)).current; // for vertical movement
+
+  useEffect(() => {
+    if (focused) {
+      Animated.parallel([
+        Animated.sequence([
+          Animated.timing(translateY, {
+            toValue: -10,
+            duration: 150,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateY, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.timing(bounceValue, {
+          toValue: 1.3,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.timing(bounceValue, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [focused]);
+
+  return (
+    <Animated.View
+      style={{
+        transform: [{ scale: bounceValue }, { translateY }],
+      }}
+    >
+      <Image
+        source={focused ? onIcon : offIcon}
+        style={styles.icon}
+      />
+    </Animated.View>
+  );
+};
 
 export default function Tabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          height: 96,
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          paddingTop: 12,
+          backgroundColor: "#383B73",
+          // backgroundColor:"transparent",
+        },
+        tabBarLabelStyle: {
+          fontFamily: "Georgia",
+          fontWeight: "300",
+          fontSize: 12,
+        },
+
+        tabBarIconStyle: {
+          marginBottom: 4, // 👈 push icon up or down
+        },
+
+        tabBarActiveTintColor: "#248EC7",
+        tabBarInactiveTintColor: "#fdfdfd60",
+        headerTitleAlign: "center",
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[focused && { backgroundColor: "#ffffff" }]}>
-              <Ionicons name="home" size={28} color={color} />
-            </View>
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              onIcon={require("../assets/01_Images/NavBarIcons/HomeOn.png")}
+              offIcon={require("../assets/01_Images/NavBarIcons/HomeOff.png")}
+            />
           ),
-          tabBarActiveTintColor: "skyblue",
-          tabBarInactiveTintColor: "#3bfa88ff",
-          tabBarLabelStyle: {
-            fontFamily: "Georgia",
-            fontWeight: '300',
-          },
           headerShown: true,
           headerStyle: {
-            backgroundColor: "rgb(0,91,238)", // Header background color
+            backgroundColor: "rgb(0,91,238)",
           },
           headerTitleStyle: {
-            color: 'white', // Header title color
-            fontSize: 20, // Header title font size
-            fontWeight: 'bold', // Header title font weight
-            paddingLeft: 16, paddingRight: 16, paddingBottom: 20,
+            color: "white",
+            fontSize: 20,
+            fontWeight: "bold",
           },
         }}
       />
-      
-      <Tab.Screen 
-        name="Dis(Re)Covery" 
+
+      <Tab.Screen
+        name="Dis(Re)Covery"
         component={() => (
-          <View style={{ paddingTop: 50, paddingBottom: 20, paddingLeft: 16, paddingRight: 16 }}>
-          <Disrecovery />
+          <View style={{ paddingTop: 50, paddingBottom: 20, paddingHorizontal: 16 }}>
+            <Disrecovery />
           </View>
-    
         )}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[focused && { backgroundColor: "#ffffff" }]}>
-              <Feather name="search" size={20} color={color} />
-            </View>
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              onIcon={require("../assets/01_Images/NavBarIcons/RediscoveryOn.png")}
+              offIcon={require("../assets/01_Images/NavBarIcons/RediscoveryOff.png")}
+            />
           ),
           headerShown: true,
           headerStyle: {
             backgroundColor: "#383B73",
             height: 124,
-            // paddingTop: 20, // Header background color
             borderRadius: 12,
           },
           headerTitleStyle: {
-            color: 'white', // Header title color
-            fontSize: 20, // Header title font size
-            fontWeight: 'bold', // Header title font weight
+            color: "white",
+            fontSize: 20,
+            fontWeight: "bold",
           },
           headerTitleContainerStyle: {
-          paddingLeft: 16, // Add padding to the left of the title
-          paddingRight: 16, // Add padding to the right of the title
-          // paddingTop: 20,
-          paddingBottom: 20, // Add padding to the bottom of the title
+            paddingHorizontal: 16,
+            paddingBottom: 20,
           },
         }}
       />
 
-      <Tab.Screen 
-        name="Profile" 
+      <Tab.Screen
+        name="Profile"
         component={Profile}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[focused && { backgroundColor: "#ffffff" }]}>
-              <MaterialCommunityIcons name="face-man-profile" size={28} color={color} />
-            </View>            
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              onIcon={require("../assets/01_Images/NavBarIcons/ProfileOn.png")}
+              offIcon={require("../assets/01_Images/NavBarIcons/ProfileOff.png")}
+            />
           ),
           headerShown: true,
           headerStyle: {
-            backgroundColor: "rgb(0,91,238)", // Header background color
+            backgroundColor: "rgb(0,91,238)",
           },
           headerTitleStyle: {
-            color: 'white', // Header title color
-            fontSize: 20, // Header title font size
-            fontWeight: 'bold', // Header title font weight
+            color: "white",
+            fontSize: 20,
+            fontWeight: "bold",
           },
-        }} 
+        }}
       />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 28,
+    height: 28,
+    resizeMode: "contain",
+  },
+});

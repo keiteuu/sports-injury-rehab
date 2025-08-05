@@ -13,10 +13,13 @@ import {
   Modal,
 } from 'react-native';
 
-// ✅ Home screen that shows the carousel
+
 const Home = ({ navigation }) => {
   const scaleD5 = useRef(new Animated.Value(1)).current;
   const scaleD4 = useRef(new Animated.Value(1)).current;
+  const scaleClose = useRef(new Animated.Value(1)).current;
+
+  const modalTranslateX = useRef(new Animated.Value(Dimensions.get('window').width)).current;
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -43,6 +46,21 @@ const Home = ({ navigation }) => {
   };
   const handlePressOutD4 = () => {
     Animated.spring(scaleD4, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressInCloseButton = () => {
+    Animated.spring(scaleClose, {
+      toValue: 1.5,
+      useNativeDriver: true,
+    }).start();
+  };
+  const handlePressOutCloseButton = () => {
+    Animated.spring(scaleClose, {
       toValue: 1,
       friction: 3,
       tension: 40,
@@ -77,6 +95,12 @@ const Home = ({ navigation }) => {
           onPress={() => {
           console.log('Tile D4 pressed');
           setIsModalVisible(true);
+          Animated.timing(modalTranslateX, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true,
+          }).start();
+
         }}
           onPressIn={handlePressInD4}
           onPressOut={handlePressOutD4}
@@ -98,19 +122,35 @@ const Home = ({ navigation }) => {
           <View style={styles.modalOverlay}>
             <BlurView intensity={80} tint="dark" style={StyleSheet.absoluteFill} />
 
-            <View>
+            <Animated.View style={[styles.modalContentWrapper, { transform: [{ translateX: modalTranslateX }] }]}>
               <Image
-                source={require('../assets/01_Images/Day4Menu.png')} // change to your desired image
+                source={require('../assets/01_Images/Day4Menu.png')}
                 style={styles.modalImage}
                 resizeMode="contain"
               />
-              <TouchableOpacity
-                onPress={() => setIsModalVisible(false)}
-                style={styles.closeButton}
+
+              <Pressable
+                onPress={() => {
+                  console.log('CloseButton pressed');
+                  Animated.timing(modalTranslateX, {
+                  toValue: Dimensions.get('window').width,
+                  duration: 500,
+                  useNativeDriver: true,
+                }).start(() => {
+                  setIsModalVisible(false);
+                });
+
+                }}
+                onPressIn={handlePressInCloseButton}
+                onPressOut={handlePressOutCloseButton}
+                style={styles.closeTileTouchable}
               >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
+                <Animated.Image
+                  source={require('../assets/01_Images/CloseIcon.png')}
+                  style={[styles.closeButton, { transform: [{ scale: scaleClose }] }]}
+                />
+              </Pressable>
+            </Animated.View>
           </View>
         </Modal>
 
@@ -185,6 +225,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   
+  modalContentWrapper: {
+  position: 'relative',
+  alignItems: 'center',
+  justifyContent: 'center',
+  },
+
   modalContent: {
     backgroundColor: 'white',
     borderRadius: 12,
@@ -193,24 +239,23 @@ const styles = StyleSheet.create({
     maxWidth: '90%',
     maxHeight: '80%',
   },
+  
 
   modalImage: {
     width: 360,
-    height: 300,
-    marginBottom: 20,
   },
 
-  closeButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: 'brown',
-    borderRadius: 8,
-  },
+  closeTileTouchable: {
+  position: 'absolute',
+  top: 218, // adjust position as needed
+  right: 21,
+  zIndex: 2,
+},
 
-  closeButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
+closeButton: {
+  width: 37,
+  resizeMode: 'contain',
+},
 
   darkOverlay: {
   ...StyleSheet.absoluteFillObject,
