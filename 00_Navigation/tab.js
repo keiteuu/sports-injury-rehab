@@ -65,6 +65,7 @@ export default function Tabs() {
           borderTopRightRadius: 12,
           paddingTop: 12,
           backgroundColor: "#383B73",
+          
           // backgroundColor:"transparent",
         },
         tabBarLabelStyle: {
@@ -80,6 +81,13 @@ export default function Tabs() {
         tabBarActiveTintColor: "#248EC7",
         tabBarInactiveTintColor: "#fdfdfd60",
         headerTitleAlign: "center",
+        
+        // backgroundColor: 'transparent',
+        // position: 'absolute',
+        // borderTopWidth: 0,
+        // elevation: 0, // for Android shadow
+
+        tabBarBackground: () => <></>,
       }}
     >
       <Tab.Screen
@@ -107,11 +115,12 @@ export default function Tabs() {
 
       <Tab.Screen
         name="Dis(Re)Covery"
-        component={() => (
-          <View style={{ paddingTop: 50, paddingBottom: 20, paddingHorizontal: 16 }}>
-            <Disrecovery />
-          </View>
-        )}
+        component={Disrecovery}
+        // component={() => (
+        //   <View style={{ paddingTop: 50, paddingBottom: 20, paddingHorizontal: 16 }}>
+        //     <Disrecovery />
+        //   </View>
+        // )}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon

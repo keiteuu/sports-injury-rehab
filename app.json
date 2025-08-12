@@ -4,7 +4,7 @@
     "slug": "SportsInjuryRehabilitation",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "../assets/00_RandomImages/splash-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,13 +17,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/00_RandomImages/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.SportsInjuryRehabilitation"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/00_RandomImages/favicon.png"
     },
     "plugins": [
       "expo-font",
