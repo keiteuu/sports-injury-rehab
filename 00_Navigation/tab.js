@@ -1,57 +1,90 @@
 import React, { useRef, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Image, StyleSheet, Animated } from "react-native";
+import { View, Image, StyleSheet, Animated, Pressable } from "react-native";
 import Home from "../01_Screens/Home";
 import Disrecovery from "../01_Screens/Disrecovery";
 import Profile from "../01_Screens/Profile";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon = ({ focused, onIcon, offIcon }) => {
-  const bounceValue = useRef(new Animated.Value(1)).current; // for scale
-  const translateY = useRef(new Animated.Value(0)).current; // for vertical movement
+const TabIcon = ({ focused, onIcon, offIcon, routeName }) => {
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    if (focused) {
-      Animated.parallel([
-        Animated.sequence([
+  const scale = useRef(new Animated.Value(1)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  // a small reusable animation sequence that bounces the icon
+  const runBounce = (toBig = true) => {
+    if (toBig) {
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(scale, {
+            toValue: 1.25,
+            duration: 140,
+            useNativeDriver: true,
+          }),
           Animated.timing(translateY, {
-            toValue: -10,
-            duration: 150,
+            toValue: -8,
+            duration: 140,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.parallel([
+          Animated.timing(scale, {
+            toValue: 1,
+            duration: 160,
             useNativeDriver: true,
           }),
           Animated.timing(translateY, {
             toValue: 0,
-            duration: 150,
+            duration: 160,
             useNativeDriver: true,
           }),
         ]),
-        Animated.timing(bounceValue, {
-          toValue: 1.3,
-          duration: 200,
+      ]).start();
+    } else {
+      // gently return to normal if requested
+      Animated.parallel([
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 180,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 180,
           useNativeDriver: true,
         }),
       ]).start();
-    } else {
-      Animated.timing(bounceValue, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
     }
+  };
+
+  // animate when `focused` changes
+  useEffect(() => {
+    if (focused) runBounce(true);
+    else runBounce(false);
   }, [focused]);
 
+  // Press handler: animate and navigate (so we also animate when tab is already focused)
+  const handlePress = () => {
+    runBounce(true);
+    // navigate to the route — same behaviour as the tab press, safe to call
+    if (routeName) navigation.navigate(routeName);
+  };
+
   return (
-    <Animated.View
-      style={{
-        transform: [{ scale: bounceValue }, { translateY }],
-      }}
-    >
-      <Image
-        source={focused ? onIcon : offIcon}
-        style={styles.icon}
-      />
-    </Animated.View>
+    <Pressable onPress={handlePress} android_ripple={{ color: "transparent" }}>
+      <Animated.View
+        style={{
+          transform: [{ scale }, { translateY }],
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Image source={focused ? onIcon : offIcon} style={styles.icon} />
+      </Animated.View>
+    </Pressable>
   );
 };
 
@@ -60,14 +93,24 @@ export default function Tabs() {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          height: 96,
+        height: 96,
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
+        paddingTop: 12,
+        backgroundColor: 'transparent',
+        position: 'absolute',
+        borderTopWidth: 0,
+        elevation: 0, // for Android shadow
+        overflow: 'hidden', // ensure children respect rounded corners
+      },
+        tabBarInner: {
+          flex: 1,
           borderTopLeftRadius: 12,
           borderTopRightRadius: 12,
-          paddingTop: 12,
-          backgroundColor: "#383B73",
-          
-          // backgroundColor:"transparent",
+          backgroundColor: '#fff', // inside color
+          overflow: 'hidden',
         },
+
         tabBarLabelStyle: {
           fontFamily: "Georgia",
           fontWeight: "300",
@@ -78,16 +121,12 @@ export default function Tabs() {
           marginBottom: 4, // 👈 push icon up or down
         },
 
-        tabBarActiveTintColor: "#248EC7",
-        tabBarInactiveTintColor: "#fdfdfd60",
-        headerTitleAlign: "center",
-        
-        // backgroundColor: 'transparent',
-        // position: 'absolute',
-        // borderTopWidth: 0,
-        // elevation: 0, // for Android shadow
-
-        tabBarBackground: () => <></>,
+        tabBarBackground: () => (
+        <View style={{
+          flex: 1,
+          backgroundColor: '#383B73', // your inside color
+        }} />
+      ),
       }}
     >
       <Tab.Screen
