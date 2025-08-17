@@ -93,40 +93,32 @@ export default function Tabs() {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-        height: 96,
-        borderTopLeftRadius: 12,
-        borderTopRightRadius: 12,
-        paddingTop: 12,
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        borderTopWidth: 0,
-        elevation: 0, // for Android shadow
-        overflow: 'hidden', // ensure children respect rounded corners
-      },
-        tabBarInner: {
-          flex: 1,
+          height: 96,
           borderTopLeftRadius: 12,
           borderTopRightRadius: 12,
-          backgroundColor: '#fff', // inside color
-          overflow: 'hidden',
+          paddingTop: 12,
+          backgroundColor: "transparent", // transparent base
+          position: "absolute",
+          borderTopWidth: 0,
+          elevation: 0,
+          overflow: "hidden", // clip corners
         },
-
+        // 🚀 Remove tabBarInner entirely, it’s causing the white bleed
         tabBarLabelStyle: {
-          fontFamily: "Georgia",
-          fontWeight: "300",
+          fontFamily: "RegestoGroteskMedium",
           fontSize: 12,
         },
-
         tabBarIconStyle: {
-          marginBottom: 4, // 👈 push icon up or down
+          marginBottom: 4,
         },
-
         tabBarBackground: () => (
-        <View style={{
-          flex: 1,
-          backgroundColor: '#383B73', // your inside color
-        }} />
-      ),
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "#383B73", // ✅ your real background color
+            }}
+          />
+        ),
       }}
     >
       <Tab.Screen
@@ -171,11 +163,14 @@ export default function Tabs() {
           headerShown: true,
           headerStyle: {
             backgroundColor: "#383B73",
-            height: 124,
+            height:120,
+            padding: 20,
             borderRadius: 12,
           },
+          
           headerTitleStyle: {
-            color: "white",
+            color: "#FFF94C",
+            fontFamily:"RegestoGroteskBold",
             fontSize: 20,
             fontWeight: "bold",
           },
@@ -200,6 +195,7 @@ export default function Tabs() {
           headerShown: true,
           headerStyle: {
             backgroundColor: "rgb(0,91,238)",
+
           },
           headerTitleStyle: {
             color: "white",

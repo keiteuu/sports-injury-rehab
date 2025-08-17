@@ -6,31 +6,55 @@ import {
   Text,
   Dimensions,
   Animated,
+  Image,
+  ScrollView,
 } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
 import { LinearGradient } from "expo-linear-gradient";
 
+
 const { width } = Dimensions.get("window");
-const ITEM_WIDTH = width * 0.5; // width for center video
+const VIDEO_ITEM_WIDTH = width * 0.5; // width for center video
+const IMAGE_ITEM_WIDTH = 320; // fixed width for image carousel
 const SPACING = 8;
-const VIDEO_ASPECT_RATIO = 9 / 16;
 
 export default function Disrecovery() {
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollXVideos = useRef(new Animated.Value(0)).current;
+  const scrollXImages = useRef(new Animated.Value(0)).current;
 
+  // Videos
   const videos = [
-    require("../assets/02_Videos/Armageddon.mp4"),
-    require("../assets/02_Videos/likeJennie.mp4"),
-    require("../assets/02_Videos/dirtyWork.mp4"),
-    require("../assets/02_Videos/FlyUp.mp4"),
-    require("../assets/02_Videos/isThisLove.mp4"),
+    {
+      src: require("../assets/02_Videos/Armageddon.mp4"),
+      title: "Armageddon",
+      subtitle: "aespa · Armageddon",
+    },
+    {
+      src: require("../assets/02_Videos/likeJennie.mp4"),
+      title: "Like Jennie",
+      subtitle: "JENNIE · Ruby",
+    },
+    {
+      src: require("../assets/02_Videos/dirtyWork.mp4"),
+      title: "Dirty Work",
+      subtitle: "aespa · Dirty Work",
+    },
+    {
+      src: require("../assets/02_Videos/FlyUp.mp4"),
+      title: "Fly Up",
+      subtitle: "RIIZE · Odyssey",
+    },
+    {
+      src: require("../assets/02_Videos/isThisLove.mp4"),
+      title: "Is This Love?",
+      subtitle: "XG · AWE",
+    },
   ];
 
-  // Create players without showing default controls
-  const players = videos.map((src) =>
-    useVideoPlayer(src, (player) => {
+  const players = videos.map((v) =>
+    useVideoPlayer(v.src, (player) => {
       player.loop = true;
-      player.pause(); // start paused
+      player.pause();
     })
   );
 
@@ -44,8 +68,17 @@ export default function Disrecovery() {
     });
   }).current;
 
+  // Images
+  const images = [
+    require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options.png"),
+    require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options-1.png"),
+    require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options-2.png"),
+    require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options-3.png"),
+    require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options-4.png"),
+  ];
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Top Button */}
       <TouchableOpacity
         style={styles.button}
@@ -53,107 +86,165 @@ export default function Disrecovery() {
       >
         <Text style={styles.buttonText}>Knee Strain</Text>
       </TouchableOpacity>
+      
+      <View style={{ height: 24 }} />
 
+      {/* ===== VIDEO SECTION ===== */}
+      <Text style={styles.sectionTitle}>DANCES</Text>
+      <Text style={styles.sectionSubtitle}>Find dances you CAN do!</Text>
       <Animated.FlatList
         data={players}
         horizontal
         showsHorizontalScrollIndicator={false}
-        snapToInterval={ITEM_WIDTH + SPACING}
+        snapToInterval={VIDEO_ITEM_WIDTH + SPACING}
         decelerationRate="fast"
         keyExtractor={(_, i) => i.toString()}
         contentContainerStyle={{
-          paddingHorizontal: (width - ITEM_WIDTH) / 2,
+          paddingHorizontal: (width - VIDEO_ITEM_WIDTH) / 2,
         }}
         onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          [{ nativeEvent: { contentOffset: { x: scrollXVideos } } }],
           { useNativeDriver: true }
         )}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 80 }}
         renderItem={({ item: player, index }) => {
+          const videoData = videos[index]; // grab title & subtitle
           const inputRange = [
-            (index - 1) * (ITEM_WIDTH + SPACING),
-            index * (ITEM_WIDTH + SPACING),
-            (index + 1) * (ITEM_WIDTH + SPACING),
+            (index - 1) * (VIDEO_ITEM_WIDTH + SPACING),
+            index * (VIDEO_ITEM_WIDTH + SPACING),
+            (index + 1) * (VIDEO_ITEM_WIDTH + SPACING),
           ];
 
-          const scale = scrollX.interpolate({
+          const scale = scrollXVideos.interpolate({
             inputRange,
             outputRange: [0.7, 1, 0.7],
             extrapolate: "clamp",
           });
 
-          const overlayOpacity = scrollX.interpolate({
+          const overlayOpacity = scrollXVideos.interpolate({
             inputRange,
             outputRange: [0.4, 0, 0.4],
             extrapolate: "clamp",
           });
 
           return (
-            <View style={{ width: ITEM_WIDTH, marginRight: SPACING }}>
+            <View style={{ width: VIDEO_ITEM_WIDTH, marginRight: SPACING }}>
               <Animated.View
-                style={[
-                  styles.videoContainer,
-                  { transform: [{ scale }] },
-                ]}
+                style={[styles.videoContainer, { transform: [{ scale }] }]}
               >
-                {/* Video */}
                 <VideoView
                   style={styles.video}
                   player={player}
                   allowsFullscreen={false}
                   allowsPictureInPicture={false}
-                  nativeControls={false} // ensure UI doesn't appear
+                  nativeControls={false}
                   resizeMode="cover"
                 />
 
-                {/* Overlay gradient and text */}
                 <LinearGradient
                   colors={["transparent", "rgba(45,47,91,0.9)"]}
                   style={styles.gradient}
                 >
-                  <Text style={styles.videoTitle}>Video Title {index + 1}</Text>
-                  <Text style={styles.videoSubtitle}>
-                    Subtitle text goes here
-                  </Text>
+                  <Text style={styles.videoTitle}>{videoData.title}</Text>
+                  <Text style={styles.videoSubtitle}>{videoData.subtitle}</Text>
                 </LinearGradient>
 
-                {/* Side fade overlay */}
                 <Animated.View
-                  style={[
-                    styles.overlay,
-                    { opacity: overlayOpacity },
-                  ]}
+                  style={[styles.overlay, { opacity: overlayOpacity }]}
                 />
               </Animated.View>
             </View>
           );
         }}
       />
-    </View>
+
+      <View style={{ height: 48 }} />
+
+      {/* ===== IMAGE SECTION ===== */}
+      <Text style={styles.sectionTitle}>REHAB EXERCISES</Text>
+      <Text style={styles.sectionSubtitle}>More options for a quicker recovery!</Text>
+      <Animated.FlatList
+        data={images}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={IMAGE_ITEM_WIDTH + SPACING}
+        decelerationRate="fast"
+        keyExtractor={(_, i) => i.toString()}
+        contentContainerStyle={{
+          paddingHorizontal: (width - IMAGE_ITEM_WIDTH) / 2,
+        }}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollXImages } } }],
+          { useNativeDriver: true }
+        )}
+        renderItem={({ item, index }) => {
+          const inputRange = [
+            (index - 1) * (IMAGE_ITEM_WIDTH + SPACING),
+            index * (IMAGE_ITEM_WIDTH + SPACING),
+            (index + 1) * (IMAGE_ITEM_WIDTH + SPACING),
+          ];
+
+          const scale = scrollXImages.interpolate({
+            inputRange,
+            outputRange: [0.85, 1, 0.85],
+            extrapolate: "clamp",
+          });
+
+          return (
+            <View style={{ width: IMAGE_ITEM_WIDTH, marginRight: SPACING }}>
+              <Animated.View
+                style={[styles.imageContainer, { transform: [{ scale }] }]}
+              >
+                <Image source={item} style={styles.image} resizeMode="cover" />
+                <LinearGradient
+                  colors={["transparent", "rgba(45,47,91,0.9)"]}
+                  style={styles.gradient}
+                >
+                  <Text style={styles.videoTitle}>Image {index + 1}</Text>
+                  <Text style={styles.videoSubtitle}>Subtitle here</Text>
+                </LinearGradient>
+              </Animated.View>
+            </View>
+          );
+        }}
+      />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#0C0C26" },
-  
+  container: { flex: 1, backgroundColor: "#0C0C26", },
+
   button: {
     backgroundColor: "#DBF208",
-    marginHorizontal: 16, // 16px margin on left and right
+    marginHorizontal: 16,
     marginTop: 24,
     paddingVertical: 12,
-  
     borderRadius: 8,
     alignItems: "center",
   },
+  buttonText: { color: "#2D2F5B", fontSize: 20, fontWeight: "bold" },
 
-  buttonText: { 
-    color: "#2D2F5B", 
+  sectionTitle: {
+    color: "#FDFDFD",
+    fontFamily: "BenzinSemibold",
     fontSize: 20,
-    fontWeight: "bold",
-    
+    marginLeft: 16,
+    marginVertical: 12,
+    marginBottom:16,
   },
 
+  sectionSubtitle:{
+    color: "#FDFDFD",
+    fontFamily: "RegestoGroteskRegular",
+    fontSize: 14,
+    marginLeft: 16,
+    marginTop: -16,
+    marginBottom: 12,
+  },
+
+  // Videos
   videoContainer: {
     borderRadius: 16,
     overflow: "hidden",
@@ -162,14 +253,29 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 9 / 16,
   },
+
+  // Images
+  imageContainer: {
+    borderRadius: 16,
+    overflow: "hidden",
+    height: 198,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+  },
+
   gradient: {
     position: "absolute",
     bottom: 0,
     width: "100%",
     padding: 12,
   },
-  videoTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
-  videoSubtitle: { color: "#fff", fontSize: 14, opacity: 0.8 },
+
+  videoTitle: { color: "#FDFDFD", fontFamily: "RegestoGroteskMedium", fontSize: 18,},
+  videoSubtitle: { color: "#FDFDFD", fontFamily: "RegestoGroteskRegular", fontSize: 16, opacity: 0.7 },
+
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "#0C0C26",
