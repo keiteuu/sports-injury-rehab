@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 const VIDEO_ITEM_WIDTH = width * 0.5;
@@ -19,6 +20,8 @@ const IMAGE_ITEM_WIDTH = 320;
 const SPACING = 8;
 
 export default function Disrecovery() {
+  const navigation = useNavigation(); // ✅ navigation hook
+
   const scrollXVideos = useRef(new Animated.Value(0)).current;
   const scrollXImages = useRef(new Animated.Value(0)).current;
 
@@ -79,7 +82,7 @@ export default function Disrecovery() {
 
   return (
     <ImageBackground
-      source={require("../assets/01_Images/Backgrounds/DisrecoveryBg.png")} // 👈 your bg image
+      source={require("../assets/01_Images/Backgrounds/DisrecoveryBg.png")} 
       style={styles.background}
       resizeMode="cover"
     >
@@ -87,7 +90,7 @@ export default function Disrecovery() {
         {/* Top Button */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => alert("ERROR 404")}
+          //onPress={() => navigation.navigate("KneeStrainScreen")} // ✅ navigate
         >
           <View
             style={{
@@ -129,12 +132,13 @@ export default function Disrecovery() {
 
           <TouchableOpacity
             style={styles.moreButton}
-            onPress={() => alert("Button Pressed!")}
+            onPress={() => navigation.navigate("ReelOptions")} // ✅ navigate
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>
         </View>
 
+        {/* VIDEO CAROUSEL */}
         <Animated.FlatList
           data={players}
           horizontal
@@ -217,11 +221,15 @@ export default function Disrecovery() {
 
           <TouchableOpacity
             style={styles.moreButton}
-            onPress={() => alert("Button Pressed!")}
+            onPress={() => navigation.navigate("ReelOptions")} // ✅ navigate
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>
         </View>
+
+       
+
+        {/* IMAGE CAROUSEL */}
         <Animated.FlatList
           data={images}
           horizontal
@@ -259,14 +267,14 @@ export default function Disrecovery() {
                     colors={["transparent", "rgba(45,47,91,0.9)"]}
                     style={styles.gradient}
                   >
-                    <Text style={styles.videoTitle}>Image {index + 1}</Text>
-                    <Text style={styles.videoSubtitle}>Subtitle here</Text>
                   </LinearGradient>
                 </Animated.View>
               </View>
             );
           }}
         />
+
+          <View style={{ height: 150 }} />
       </ScrollView>
     </ImageBackground>
   );

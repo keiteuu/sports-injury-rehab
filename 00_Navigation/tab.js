@@ -1,20 +1,16 @@
 import React, { useRef, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Image, StyleSheet, Animated, Pressable } from "react-native";
+import { View, Image, StyleSheet, Animated } from "react-native";
 import Home from "../01_Screens/Home";
 import Disrecovery from "../01_Screens/Disrecovery";
 import Profile from "../01_Screens/Profile";
-import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon = ({ focused, onIcon, offIcon, routeName }) => {
-  const navigation = useNavigation();
-
+const AnimatedIcon = ({ focused, onIcon, offIcon }) => {
   const scale = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
 
-  // a small reusable animation sequence that bounces the icon
   const runBounce = (toBig = true) => {
     if (toBig) {
       Animated.sequence([
@@ -44,7 +40,6 @@ const TabIcon = ({ focused, onIcon, offIcon, routeName }) => {
         ]),
       ]).start();
     } else {
-      // gently return to normal if requested
       Animated.parallel([
         Animated.timing(scale, {
           toValue: 1,
@@ -60,31 +55,21 @@ const TabIcon = ({ focused, onIcon, offIcon, routeName }) => {
     }
   };
 
-  // animate when `focused` changes
   useEffect(() => {
     if (focused) runBounce(true);
     else runBounce(false);
   }, [focused]);
 
-  // Press handler: animate and navigate (so we also animate when tab is already focused)
-  const handlePress = () => {
-    runBounce(true);
-    // navigate to the route — same behaviour as the tab press, safe to call
-    if (routeName) navigation.navigate(routeName);
-  };
-
   return (
-    <Pressable onPress={handlePress} android_ripple={{ color: "transparent" }}>
-      <Animated.View
-        style={{
-          transform: [{ scale }, { translateY }],
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Image source={focused ? onIcon : offIcon} style={styles.icon} />
-      </Animated.View>
-    </Pressable>
+    <Animated.View
+      style={{
+        transform: [{ scale }, { translateY }],
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Image source={focused ? onIcon : offIcon} style={styles.icon} />
+    </Animated.View>
   );
 };
 
@@ -97,27 +82,18 @@ export default function Tabs() {
           borderTopLeftRadius: 12,
           borderTopRightRadius: 12,
           paddingTop: 12,
-          backgroundColor: "transparent", // transparent base
+          backgroundColor: "transparent",
           position: "absolute",
           borderTopWidth: 0,
           elevation: 0,
-          overflow: "hidden", // clip corners
+          overflow: "hidden",
         },
-        // 🚀 Remove tabBarInner entirely, it’s causing the white bleed
         tabBarLabelStyle: {
           fontFamily: "RegestoGroteskMedium",
           fontSize: 12,
         },
-        tabBarIconStyle: {
-          marginBottom: 4,
-        },
         tabBarBackground: () => (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "#383B73", // ✅ your real background color
-            }}
-          />
+          <View style={{ flex: 1, backgroundColor: "#383B73" }} />
         ),
       }}
     >
@@ -126,16 +102,14 @@ export default function Tabs() {
         component={Home}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon
+            <AnimatedIcon
               focused={focused}
               onIcon={require("../assets/01_Images/NavBarIcons/HomeOn.png")}
               offIcon={require("../assets/01_Images/NavBarIcons/HomeOff.png")}
             />
           ),
           headerShown: true,
-          headerStyle: {
-            backgroundColor: "rgb(0,91,238)",
-          },
+          headerStyle: { backgroundColor: "rgb(0,91,238)" },
           headerTitleStyle: {
             color: "white",
             fontSize: 20,
@@ -147,36 +121,30 @@ export default function Tabs() {
       <Tab.Screen
         name="Dis(Re)Covery"
         component={Disrecovery}
-        // component={() => (
-        //   <View style={{ paddingTop: 50, paddingBottom: 20, paddingHorizontal: 16 }}>
-        //     <Disrecovery />
-        //   </View>
-        // )}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon
+            <AnimatedIcon
               focused={focused}
               onIcon={require("../assets/01_Images/NavBarIcons/RediscoveryOn.png")}
               offIcon={require("../assets/01_Images/NavBarIcons/RediscoveryOff.png")}
             />
           ),
           headerShown: true,
-          headerStyle: {
-            backgroundColor: "#383B73",
-            height:120,
-            padding: 20,
-            borderRadius: 12,
-          },
-          
+          headerBackground: () => (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: "#383B73",
+                borderBottomWidth: 2,
+                borderBottomColor: "#1B2342",
+              }}
+            />
+          ),
           headerTitleStyle: {
-            color: "#FFF94C",
-            fontFamily:"RegestoGroteskBold",
+            fontFamily: "RegestoGroteskBold",
             fontSize: 20,
-            fontWeight: "bold",
-          },
-          headerTitleContainerStyle: {
-            paddingHorizontal: 16,
-            paddingBottom: 20,
+            paddingLeft: 16,
+            color: "#FFF94C",
           },
         }}
       />
@@ -186,17 +154,14 @@ export default function Tabs() {
         component={Profile}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon
+            <AnimatedIcon
               focused={focused}
               onIcon={require("../assets/01_Images/NavBarIcons/ProfileOn.png")}
               offIcon={require("../assets/01_Images/NavBarIcons/ProfileOff.png")}
             />
           ),
           headerShown: true,
-          headerStyle: {
-            backgroundColor: "rgb(0,91,238)",
-
-          },
+          headerStyle: { backgroundColor: "rgb(0,91,238)" },
           headerTitleStyle: {
             color: "white",
             fontSize: 20,
