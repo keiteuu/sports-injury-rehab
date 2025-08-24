@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 import 'react-native-gesture-handler';
 import * as Font from 'expo-font';
 
-
-// Import your extra screen(s)
+// Import your extra screens
 import ReelOptions from "./01_Screens/ReelOptions"; 
+import RediscoverYourRhythm from "./01_Screens/RediscoverYourRhythm";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +43,7 @@ export default function App() {
   }, []);
 
   if (!ready) {
-    return null; // or a loading screen
+    return null; // or show a splash/loading screen
   }
 
   return (
@@ -54,6 +54,7 @@ export default function App() {
 
         {/* Extra screens go here */}
         <Stack.Screen name="ReelOptions" component={ReelOptions} />
+        <Stack.Screen name="RediscoverYourRhythm" component={RediscoverYourRhythm} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
