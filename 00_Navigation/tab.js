@@ -115,6 +115,8 @@ export default function Tabs() {
             fontSize: 20,
             fontWeight: "bold",
           },
+          // 🔥 this makes screen reset each time you leave it
+          unmountOnBlur: true,
         }}
       />
 
@@ -146,6 +148,7 @@ export default function Tabs() {
             paddingLeft: 16,
             color: "#FFF94C",
           },
+          unmountOnBlur: true,
         }}
       />
 
@@ -167,6 +170,7 @@ export default function Tabs() {
             fontSize: 20,
             fontWeight: "bold",
           },
+          unmountOnBlur: true,
         }}
       />
     </Tab.Navigator>

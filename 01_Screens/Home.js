@@ -46,7 +46,7 @@ const Home = () => {
 
   const dropdownHeight = dropdownAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 150], // adjust expanded height
+    outputRange: [0, 124], // adjust expanded height
   });
 
   // --- Animations for D5 ---
@@ -67,6 +67,8 @@ const Home = () => {
   const scaleClose = useRef(new Animated.Value(1)).current;
   const scaleStart = useRef(new Animated.Value(1)).current;
 
+  
+
   return (
     <ImageBackground
       source={require('../assets/01_Images/Backgrounds/HomeBg.png')}
@@ -79,6 +81,81 @@ const Home = () => {
             style={styles.roadmap}
             resizeMode="contain"
           />
+
+          {/* --- Tile D4 --- */}
+          <Pressable
+            onPress={() => {
+            console.log('Tile D4 pressed');
+            setIsModalVisibleD4(true);
+            Animated.timing(modalTranslateXD4, {
+              toValue: 0,
+              duration: 500,
+              useNativeDriver: true,
+            }).start();
+          }}
+          onPressIn={() => {
+            Animated.spring(scaleD4, { toValue: 1.05, useNativeDriver: true }).start();
+          }}
+          onPressOut={() => {
+            Animated.spring(scaleD4, { toValue: 1, friction: 3, tension: 40, useNativeDriver: true }).start();
+          }}
+          style={styles.tileTouchableD4}
+        >
+          <Animated.Image
+            source={require('../assets/01_Images/TileD4.png')}
+            style={[styles.tile, { transform: [{ scale: scaleD4 }] }]}
+          />
+        </Pressable>
+
+          {/* --- Modal for D4 --- */}
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={isModalVisibleD4}
+            onRequestClose={() => setIsModalVisibleD4(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <BlurView intensity={80} tint="dark" style={StyleSheet.absoluteFill} />
+
+              <Animated.View
+                style={[
+                  styles.modalContentWrapper,
+                  { transform: [{ translateX: modalTranslateXD4 }] },
+                ]}
+              >
+                <Image
+                  source={require('../assets/01_Images/Day4Menu.png')}
+                  style={styles.modalImage}
+                  resizeMode="contain"
+                />
+
+                <Pressable
+                  onPress={() => {
+                    console.log('Close D4');
+                    Animated.timing(modalTranslateXD4, {
+                      toValue: Dimensions.get('window').width,
+                      duration: 500,
+                      useNativeDriver: true,
+                    }).start(() => {
+                      setIsModalVisibleD4(false);
+                    });
+                  }}
+                  onPressIn={() => {
+                    Animated.spring(scaleClose, { toValue: 1.5, useNativeDriver: true }).start();
+                  }}
+                  onPressOut={() => {
+                    Animated.spring(scaleClose, { toValue: 1, friction: 3, tension: 40, useNativeDriver: true }).start();
+                  }}
+                  style={styles.closeTileTouchable}
+                >
+                  <Animated.Image
+                    source={require('../assets/01_Images/CloseIcon.png')}
+                    style={[styles.closeButtonD4, { transform: [{ scale: scaleClose }] }]}
+                  />
+                </Pressable>
+              </Animated.View>
+            </View>
+          </Modal>
 
           {/* --- Tile D5 --- */}
           <Pressable
@@ -143,12 +220,13 @@ const Home = () => {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         paddingHorizontal: 20,
-                        marginTop: 10,
+                        marginTop: 18,
+                        marginBottom: -4
                       }}
                     >
                       <Image
                         source={require('../assets/01_Images/Day 5.png')}
-                        style={{ height: 30, resizeMode: 'contain' }}
+                        style={{ height: 30, resizeMode: 'contain', marginLeft: -80 }}
                       />
 
                       <Pressable
@@ -180,7 +258,7 @@ const Home = () => {
                         <Animated.Image
                           source={require('../assets/01_Images/CloseIcon.png')}
                           style={[
-                            styles.closeButton,
+                            styles.closeButtonD5,
                             { transform: [{ scale: scaleClose }] },
                           ]}
                         />
@@ -357,6 +435,7 @@ const Home = () => {
                           </Animated.View>
                         </Pressable>
                       </View>
+                      
                     </View>
                   </View>
                 </ImageBackground>
@@ -375,15 +454,25 @@ const styles = StyleSheet.create({
   imageWrapper: { position: 'relative', height: '100%', alignItems: 'center', justifyContent: 'center' },
   roadmap: { width: 306, height: 1350, marginBottom: 50 },
   tileTouchableD5: { position: 'absolute', top: 738, left: '14.5%', zIndex: 3 },
+  tileTouchableD4: { position: 'absolute', top: 840, left: '35.5%', zIndex: 3 },
   tile: { width: 141, resizeMode: 'contain' },
   modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   modalContentWrapper: { alignItems: 'center', justifyContent: 'center' },
-  modalImage: { width: Dimensions.get('window').width - 60, height: 500, marginHorizontal: 40, alignItems: 'center' },
+  modalImage: { width: Dimensions.get('window').width- 40, height: 516, marginHorizontal: 40, alignItems: 'center' },
   modalInnerContainer: { flex: 1 },
   
 
   closeTileD5Touchable: { marginLeft: 10 },
-  closeButton: { width: 37, resizeMode: 'contain' },
+  closeButtonD5: 
+  {
+    width: 37,
+    height: 37,      // keep square ratio
+    resizeMode: 'contain',
+    marginLeft: 10,  // small spacing from the Day 5 image if needed },
+  },
+
+  closeButtonD4: { width: 37, resizeMode: 'contain', position:'absolute', top: -512, left: '30.5%',  },
+  
   innerBar: {
     backgroundColor: '#FDFDFD',
     height: 64,
@@ -391,8 +480,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#42485D',
-    
   },
+
   innerText: { fontFamily: 'RegestoGroteskBold', fontSize: 20, color: '#383B73' },
   scrollSnap: {
     alignItems: 'center',
