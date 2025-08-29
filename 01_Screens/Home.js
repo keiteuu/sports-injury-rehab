@@ -79,7 +79,7 @@ const Home = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.imageWrapper}>
           <Image
-            source={require('../assets/01_Images/Recovery Roadmap.png')}
+            source={require('../assets/01_Images/Recovery Roadmap 2.png')}
             style={styles.roadmap}
             resizeMode="contain"
           />
@@ -472,8 +472,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   scrollContainer: { alignItems: 'center', paddingBottom: 20 },
-  imageWrapper: { position: 'relative', height: '100%', alignItems: 'center', justifyContent: 'center' },
-  roadmap: { width: 306, height: 1350, marginBottom: 50 },
+  imageWrapper: { position: 'relative', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' },
+  roadmap: { width: 420, height: 1350, marginBottom: 72 },
   tileTouchableD5: { position: 'absolute', top: 738, left: '14.5%', zIndex: 3 },
   tileTouchableD4: { position: 'absolute', top: 840, left: '35.5%', zIndex: 3 },
   tile: { width: 141, resizeMode: 'contain' },

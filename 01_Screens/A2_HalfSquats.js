@@ -63,7 +63,7 @@ const A2_HalfSquats = ({ navigation }) => {
 
   const translateX = slideAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [-20, 0],
+    outputRange: [-280, 60],
   });
 
   return (
@@ -128,12 +128,12 @@ const styles = StyleSheet.create({
   video: { width: "100%", height: "100%" },
   exerciseInfoWrapper: { marginTop: 20, alignItems: "center" },
   exerciseInfo: { width: "95%", height: 164 },
-  recordWrapper: { position: "absolute", top: 40, left: 20, flexDirection: "row", alignItems: "center" },
-  recordContainer: { width: 96, height: 96, justifyContent: "center", alignItems: "center" },
+  recordWrapper: { position: "absolute", top: 48, left: 24, flexDirection: "row", alignItems: "center" },
+  recordContainer: { width: 96, height: 96, justifyContent: "center", alignItems: "center", zIndex: 3, },
   recordIcon: { width: 96, height: 96 },
-  songInfo: { position: "absolute", left: 0, backgroundColor: "#D9D9D9", paddingVertical: 8, paddingRight: 32, paddingLeft: 48, borderRadius: 8, borderWidth: 2, borderColor: "#131A3C" },
-  songTitle: { color: "#383B73", fontSize: 18 },
-  songArtist: { color: "#383B73", fontSize: 14, marginTop: -2 },
+  songInfo: { position: "absolute", left: 0, backgroundColor: "#FDFDFD", paddingVertical: 8, paddingRight: 32, paddingLeft: 48, borderRadius: 8, borderWidth: 2, borderColor: "#131A3C" },
+  songTitle: { color: "#383B73", fontSize: 18, fontFamily: 'BenzinMedium' },
+  songArtist: { color: "#383B73", fontSize: 14, marginTop: -2, fontFamily:'RegestoGroteskRegular' },
 });
 
 export default A2_HalfSquats;

@@ -20,6 +20,19 @@ const A_SingleLegRaise = ({ navigation }) => {
     info: require("../assets/01_Images/ExerciseInfo/SingleLegRaise.png"),
   };
 
+  // Seek bar
+  const trackWidth = (width - 40) * 0.8;
+
+  const barWidth = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0%", "80%"],
+  });
+
+  const dotTranslateX = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, trackWidth],
+  });
+
   // Spin loop
   useEffect(() => {
     if (isPlaying) {
@@ -39,7 +52,7 @@ const A_SingleLegRaise = ({ navigation }) => {
   const handlePlaybackStatus = (status) => {
     if (status.isLoaded) {
       if (status.didJustFinish) {
-        navigation.replace("A2_HalfSquats"); // Go to next page
+        navigation.replace("A_SingleLegRaises"); // Go to next page
       } else {
         setIsPlaying(status.isPlaying);
       }
@@ -63,7 +76,7 @@ const A_SingleLegRaise = ({ navigation }) => {
 
   const translateX = slideAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [-20, 0],
+    outputRange: [-280, 60],
   });
 
   return (
@@ -72,18 +85,55 @@ const A_SingleLegRaise = ({ navigation }) => {
         source={require("../assets/01_Images/Backgrounds/RYR Bg.png")}
         style={styles.background}
       >
-        {/* Video */}
+
         <View style={styles.videoWrapper}>
-          <Video
-            ref={videoRef}
-            source={videoData.src}
-            style={styles.video}
-            resizeMode="cover"
-            shouldPlay
-            isLooping={false}
-            isMuted={false}
-            onPlaybackStatusUpdate={handlePlaybackStatus}
-          />
+  {/* Gradient background */}
+  <LinearGradient
+    colors={["#000329", "#1625ffff"]} // change these to your gradient colors
+    style={StyleSheet.absoluteFill}
+  />
+
+  {/* Video */}
+  <Video
+    ref={videoRef}
+    source={videoData.src}
+    style={styles.video}
+    resizeMode="cover"
+    shouldPlay
+    isLooping={false}
+    isMuted={false}
+    onPlaybackStatusUpdate={handlePlaybackStatus}
+    />
+  </View>
+
+        
+
+        {/* Seek Bar Row */}
+        <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
+          <View style={styles.seekBarContainer}>
+            <View style={styles.track} />
+            <Animated.View style={[styles.progressFill, { width: barWidth }]}>
+              <LinearGradient
+                colors={["#DBF208", "#0A78FF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </Animated.View>
+            <Animated.View
+              style={[styles.dot, { transform: [{ translateX: dotTranslateX }] }]}
+            >
+              <Image
+                source={require("../assets/01_Images/Person Icon.png")}
+                style={styles.avatar}
+              />
+            </Animated.View>
+          </View>
+
+          {/* END Button */}
+          <View style={styles.endButton}>
+            <Text style={styles.endText}> END </Text>
+          </View>
         </View>
 
         {/* Info */}
@@ -129,11 +179,58 @@ const styles = StyleSheet.create({
   exerciseInfoWrapper: { marginTop: 20, alignItems: "center" },
   exerciseInfo: { width: "95%", height: 164 },
   recordWrapper: { position: "absolute", top: 40, left: 20, flexDirection: "row", alignItems: "center" },
-  recordContainer: { width: 96, height: 96, justifyContent: "center", alignItems: "center" },
+  recordContainer: { width: 96, height: 96, justifyContent: "center", alignItems: "center", zIndex: 3, },
   recordIcon: { width: 96, height: 96 },
-  songInfo: { position: "absolute", left: 0, backgroundColor: "#D9D9D9", paddingVertical: 8, paddingRight: 32, paddingLeft: 48, borderRadius: 8, borderWidth: 2, borderColor: "#131A3C" },
-  songTitle: { color: "#383B73", fontSize: 18 },
-  songArtist: { color: "#383B73", fontSize: 14, marginTop: -2 },
+  songInfo: { position: "absolute", left: 0, backgroundColor: "#FDFDFD", paddingVertical: 8, paddingRight: 32, paddingLeft: 48, borderRadius: 8, borderWidth: 2, borderColor: "#131A3C" },
+  songTitle: { color: "#383B73", fontSize: 18, fontFamily: 'BenzinMedium' },
+  songArtist: { color: "#383B73", fontSize: 14, marginTop: -2, fontFamily:'RegestoGroteskRegular' },
+  endButton: {
+    borderWidth: 2,
+    borderColor: "#1C2443",
+    backgroundColor: "#DBF208",
+    marginLeft: -60,
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: "center",
+    width: 68,
+    height: 38,
+  },
+  endText: { color: "#383B73", fontFamily: "BenzinSemibold", fontSize: 12 },
+  seekBarContainer: {
+    height: 40,
+    marginTop: 20,
+    marginLeft: 18,
+    width: width - 40,
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  track: {
+    height: 12,
+    width: "80%",
+    backgroundColor: "#909090",
+    borderRadius: 8,
+  },
+  progressFill: {
+    position: "absolute",
+    height: 12,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  gradient: {
+    position: 'absolute',
+    top: 600,
+    borderRadius: 8,
+  },
+  dot: { position: "absolute", left: -4 },
+  avatar: { width: 48, height: 48 },
+
+  videoWrapper: {
+    width: "100%",
+    height: 600, // set your desired height
+    overflow: "hidden",
+    borderRadius: 12, // optional
+  },
 });
 
 export default A_SingleLegRaise;
