@@ -20,38 +20,18 @@ const IMAGE_ITEM_WIDTH = 320;
 const SPACING = 8;
 
 export default function Disrecovery() {
-  const navigation = useNavigation(); // ✅ navigation hook
+  const navigation = useNavigation();
 
   const scrollXVideos = useRef(new Animated.Value(0)).current;
   const scrollXImages = useRef(new Animated.Value(0)).current;
 
   // Videos
   const videos = [
-    {
-      src: require("../assets/02_Videos/Armageddon.mp4"),
-      title: "Armageddon",
-      subtitle: "aespa · Armageddon",
-    },
-    {
-      src: require("../assets/02_Videos/likeJennie.mp4"),
-      title: "Like Jennie",
-      subtitle: "JENNIE · Ruby",
-    },
-    {
-      src: require("../assets/02_Videos/dirtyWork.mp4"),
-      title: "Dirty Work",
-      subtitle: "aespa · Dirty Work",
-    },
-    {
-      src: require("../assets/02_Videos/FlyUp.mp4"),
-      title: "Fly Up",
-      subtitle: "RIIZE · Odyssey",
-    },
-    {
-      src: require("../assets/02_Videos/isThisLove.mp4"),
-      title: "Is This Love?",
-      subtitle: "XG · AWE",
-    },
+    { src: require("../assets/02_Videos/Armageddon.mp4"), title: "Armageddon", subtitle: "aespa · Armageddon" },
+    { src: require("../assets/02_Videos/likeJennie.mp4"), title: "Like Jennie", subtitle: "JENNIE · Ruby" },
+    { src: require("../assets/02_Videos/dirtyWork.mp4"), title: "Dirty Work", subtitle: "aespa · Dirty Work" },
+    { src: require("../assets/02_Videos/FlyUp.mp4"), title: "Fly Up", subtitle: "RIIZE · Odyssey" },
+    { src: require("../assets/02_Videos/isThisLove.mp4"), title: "Is This Love?", subtitle: "XG · AWE" },
   ];
 
   const players = videos.map((v) =>
@@ -82,41 +62,25 @@ export default function Disrecovery() {
 
   return (
     <ImageBackground
-      source={require("../assets/01_Images/Backgrounds/DisrecoveryBg.png")} 
+      source={require("../assets/01_Images/Backgrounds/DisrecoveryBg.png")}
       style={styles.background}
       resizeMode="cover"
     >
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <Image
+              source={require('../assets/01_Images/Top Gradient.png')}
+              style={{position: 'absolute',  }}/>
         {/* Top Button */}
-        <TouchableOpacity
-          style={styles.button}
-          //onPress={() => navigation.navigate("KneeStrainScreen")} // ✅ navigate
-        >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-start",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "flex-start",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={require("../assets/01_Images/Icons/Diecut/Type=Knee Strain.png")}
-                style={{ width: 36, height: 36, marginLeft: 16, marginRight: 12 }}
-              />
-              <Text style={styles.buttonText}>Knee Strain</Text>
-            </View>
+        <TouchableOpacity style={styles.button}>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <Image
+              source={require("../assets/01_Images/Icons/Diecut/Type=Knee Strain.png")}
+              style={{ width: 36, height: 36, marginLeft: 16, marginRight: 12 }}
+            />
+            <Text style={styles.buttonText}>Knee Strain</Text>
             <Image
               source={require("../assets/01_Images/Icons/Direct/Type=Next Circle.png")}
-              style={{ width: 36, height: 36, marginRight: 16 }}
+              style={{ width: 36, height: 36, marginLeft: "auto", marginRight: 16 }}
             />
           </View>
         </TouchableOpacity>
@@ -129,16 +93,14 @@ export default function Disrecovery() {
             <Text style={styles.sectionTitle}>DANCES</Text>
             <Text style={styles.sectionSubtitle}>Find dances you CAN do!</Text>
           </View>
-
           <TouchableOpacity
             style={styles.moreButton}
-            onPress={() => navigation.navigate("ReelOptions")} // ✅ navigate
+            onPress={() => navigation.navigate("ReelOptions")}
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>
         </View>
 
-        {/* VIDEO CAROUSEL */}
         <Animated.FlatList
           data={players}
           horizontal
@@ -177,9 +139,7 @@ export default function Disrecovery() {
 
             return (
               <View style={{ width: VIDEO_ITEM_WIDTH, marginRight: SPACING }}>
-                <Animated.View
-                  style={[styles.videoContainer, { transform: [{ scale }] }]}
-                >
+                <Animated.View style={[styles.videoContainer, { transform: [{ scale }] }]}>
                   <VideoView
                     style={styles.video}
                     player={player}
@@ -194,14 +154,10 @@ export default function Disrecovery() {
                     style={styles.gradient}
                   >
                     <Text style={styles.videoTitle}>{videoData.title}</Text>
-                    <Text style={styles.videoSubtitle}>
-                      {videoData.subtitle}
-                    </Text>
+                    <Text style={styles.videoSubtitle}>{videoData.subtitle}</Text>
                   </LinearGradient>
 
-                  <Animated.View
-                    style={[styles.overlay, { opacity: overlayOpacity }]}
-                  />
+                  <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]} />
                 </Animated.View>
               </View>
             );
@@ -214,22 +170,16 @@ export default function Disrecovery() {
         <View style={styles.titleAndButton}>
           <View style={styles.titleContainer}>
             <Text style={styles.sectionTitle}>REHAB EXERCISES</Text>
-            <Text style={styles.sectionSubtitle}>
-              More options for a quicker recovery!
-            </Text>
+            <Text style={styles.sectionSubtitle}>More options for a quicker recovery!</Text>
           </View>
-
           <TouchableOpacity
             style={styles.moreButton}
-            onPress={() => navigation.navigate("ReelOptions")} // ✅ navigate
+            onPress={() => navigation.navigate("ReelOptions")}
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>
         </View>
 
-       
-
-        {/* IMAGE CAROUSEL */}
         <Animated.FlatList
           data={images}
           horizontal
@@ -259,22 +209,19 @@ export default function Disrecovery() {
 
             return (
               <View style={{ width: IMAGE_ITEM_WIDTH, marginRight: SPACING }}>
-                <Animated.View
-                  style={[styles.imageContainer, { transform: [{ scale }] }]}
-                >
+                <Animated.View style={[styles.imageContainer, { transform: [{ scale }] }]}>
                   <Image source={item} style={styles.image} resizeMode="cover" />
                   <LinearGradient
                     colors={["transparent", "rgba(45,47,91,0.9)"]}
                     style={styles.gradient}
-                  >
-                  </LinearGradient>
+                  />
                 </Animated.View>
               </View>
             );
           }}
         />
 
-          <View style={{ height: 150 }} />
+        <View style={{ height: 150 }} />
       </ScrollView>
     </ImageBackground>
   );
@@ -283,7 +230,6 @@ export default function Disrecovery() {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   container: { flex: 1 },
-
   button: {
     backgroundColor: "#DBF208",
     marginHorizontal: 16,
@@ -293,16 +239,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#3B472C",
-    flex: 1,
     flexDirection: "row",
   },
-
   buttonText: {
-    color: "#2D2F5B",
+    color: "#2D2F5C",
     fontSize: 20,
     fontFamily: "RegestoGroteskBold",
   },
-
   sectionTitle: {
     color: "#FDFDFD",
     fontFamily: "BenzinSemibold",
@@ -311,7 +254,6 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     marginBottom: 16,
   },
-
   sectionSubtitle: {
     color: "#FDFDFD",
     fontFamily: "RegestoGroteskRegular",
@@ -320,7 +262,6 @@ const styles = StyleSheet.create({
     marginTop: -16,
     marginBottom: 20,
   },
-
   videoContainer: {
     borderRadius: 16,
     overflow: "hidden",
@@ -329,7 +270,6 @@ const styles = StyleSheet.create({
     width: "100%",
     aspectRatio: 9 / 16,
   },
-
   imageContainer: {
     borderRadius: 16,
     overflow: "hidden",
@@ -340,14 +280,12 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 16,
   },
-
   gradient: {
     position: "absolute",
     bottom: 0,
     width: "100%",
     padding: 12,
   },
-
   videoTitle: {
     color: "#FDFDFD",
     fontFamily: "RegestoGroteskMedium",
@@ -359,23 +297,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.7,
   },
-
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "#0C0C26",
   },
-
   titleContainer: {
-    flex: 1,
     flexDirection: "column",
   },
-
   titleAndButton: {
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'space-between'    
   },
-
   moreButton: {
     borderWidth: 2,
     borderColor: "#1C2443",
@@ -387,6 +320,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
   },
-
   moreText: { color: "#fdfdfd", fontFamily: "BenzinMedium", fontSize: 12 },
 });

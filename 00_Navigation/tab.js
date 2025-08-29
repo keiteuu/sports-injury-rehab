@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Image, StyleSheet, Animated } from "react-native";
+import { View, Image, StyleSheet, Animated, Text } from "react-native";
 import Home from "../01_Screens/Home";
 import Disrecovery from "../01_Screens/Disrecovery";
 import Profile from "../01_Screens/Profile";
@@ -109,12 +109,53 @@ export default function Tabs() {
             />
           ),
           headerShown: true,
-          headerStyle: { backgroundColor: "rgb(0,91,238)" },
+          headerStyle: {
+                backgroundColor: "#383B73",
+                borderBottomWidth: 2,
+                borderBottomColor: "#222345", 
+              },
           headerTitleStyle: {
-            color: "white",
+            fontFamily: "RegestoGroteskBold",
             fontSize: 20,
-            fontWeight: "bold",
+            paddingLeft: 16,
+            color: "#FFF94C",
           },
+          headerTitle: () => {
+            return (
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%",  }}>
+              
+              {/* Left box */}
+              <View style={{ flexDirection: "row", alignItems: "center",  }}>
+                <Image
+                  source={require("../assets/01_Images/Icons/Diecut/Type=Knee Strain.png")}
+                  style={{ width: 32, height: 32, marginRight: 12, marginLeft: 16,}}
+                />
+                <View >
+                  <Text style={{ fontFamily: "RegestoGroteskRegular", fontSize: 12, color: "#fdfdfd", marginBottom: -2,}}>
+                    Current Program
+                  </Text>
+                  <Text style={{ fontFamily: "RegestoGroteskBold", fontSize: 18, color: "#FFF94C" }}>
+                    Knee Strain
+                  </Text>
+                </View>
+                
+              </View>
+              
+              {/* Right box */}
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/01_Images/Icons/Diecut/Type=Streaks.png")}
+                  style={{ width: 32, height: 32, marginRight: 8, }}
+                />
+                <Text style={{ fontFamily: "BenzinSemibold", fontSize: 24, color: "#FFF94C", marginRight: 16 }}>
+                  4
+                </Text>
+                
+              </View>
+
+            </View>
+          );
+        },
           // 🔥 this makes screen reset each time you leave it
           unmountOnBlur: true,
         }}
@@ -138,7 +179,7 @@ export default function Tabs() {
                 flex: 1,
                 backgroundColor: "#383B73",
                 borderBottomWidth: 2,
-                borderBottomColor: "#1B2342",
+                borderBottomColor: "#222345",
               }}
             />
           ),
@@ -149,6 +190,7 @@ export default function Tabs() {
             color: "#FFF94C",
           },
           unmountOnBlur: true,
+          
         }}
       />
 
@@ -164,12 +206,38 @@ export default function Tabs() {
             />
           ),
           headerShown: true,
-          headerStyle: { backgroundColor: "rgb(0,91,238)" },
+          headerStyle: { flex: 1,
+                backgroundColor: "#383B73",
+                borderBottomWidth: 2,
+                borderBottomColor: "#222345", },
           headerTitleStyle: {
-            color: "white",
+            fontFamily: "RegestoGroteskBold",
             fontSize: 20,
-            fontWeight: "bold",
+            paddingLeft: 16,
+            color: "#FFF94C",
           },
+          headerTitle: () => {
+            return (
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%",  }}>
+              
+              {/* Left box */}
+              <View style={{ flexDirection: "row", alignItems: "center",  }}>
+                  <Text style={{ fontFamily: "RegestoGroteskBold", fontSize: 20, color: "#FFF94C", paddingLeft: 16, }}>
+                    Profile
+                  </Text>
+              </View>
+              
+              {/* Right box */}
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/01_Images/Icons/Diecut/Settings.png")}
+                  style={{ width: 32, height: 32, marginRight: 8, }}
+                />
+              </View>
+
+            </View>
+          );
+        },
           unmountOnBlur: true,
         }}
       />

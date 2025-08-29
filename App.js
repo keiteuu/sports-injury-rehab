@@ -12,7 +12,9 @@ import * as Font from 'expo-font';
 
 // Import your extra screens
 import ReelOptions from "./01_Screens/ReelOptions"; 
-import RediscoverYourRhythm from "./01_Screens/RediscoverYourRhythm";
+import A_SingleLegRaise from "./01_Screens/A_SingleLegRaise";
+import A2_HalfSquats from "./01_Screens/A2_HalfSquats";
+import A3_WallSits from './01_Screens/A3_WallSits';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,7 +56,9 @@ export default function App() {
 
         {/* Extra screens go here */}
         <Stack.Screen name="ReelOptions" component={ReelOptions} />
-        <Stack.Screen name="RediscoverYourRhythm" component={RediscoverYourRhythm} />
+        <Stack.Screen name="A_SingleLegRaise" component={A_SingleLegRaise} />
+        <Stack.Screen name="A2_HalfSquats" component={A2_HalfSquats} />
+        <Stack.Screen name="A3_WallSits" component={A3_WallSits} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

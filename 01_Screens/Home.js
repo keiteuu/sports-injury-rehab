@@ -11,6 +11,7 @@ import {
   Animated,
   Modal,
   ImageBackground,
+  TouchableOpacity
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -74,6 +75,7 @@ const Home = () => {
       source={require('../assets/01_Images/Backgrounds/HomeBg.png')}
       style={styles.background}
     >
+      
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.imageWrapper}>
           <Image
@@ -81,6 +83,8 @@ const Home = () => {
             style={styles.roadmap}
             resizeMode="contain"
           />
+
+          
 
           {/* --- Tile D4 --- */}
           <Pressable
@@ -408,7 +412,7 @@ const Home = () => {
                       {/* START Button */}
                       <View style={{ alignItems: 'center', marginTop: 16 }}>
                         <Pressable
-                          onPress={() => navigation.navigate('RediscoverYourRhythm')}
+                          onPress={() => navigation.navigate('A_SingleLegRaise')}
                           onPressIn={() => {
                             Animated.spring(scaleStart, {
                               toValue: 1.2,
@@ -444,6 +448,23 @@ const Home = () => {
           </Modal>
         </View>
       </ScrollView>
+
+      <Image
+      source={require('../assets/01_Images/Top Gradient.png')}
+      style={{position: 'absolute',  }}/>
+      <TouchableOpacity style={styles.button}>
+                    <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+                      <Image
+                        source={require("../assets/01_Images/Icons/Diecut/Type=Genre.png")}
+                        style={{ width: 36, height: 36, marginLeft: 16, marginRight: 12 }}
+                      />
+                      <Text style={styles.buttonText}>K-Pop</Text>
+                      <Image
+                        source={require("../assets/01_Images/Icons/Direct/Type=Next Circle.png")}
+                        style={{ width: 36, height: 36, marginLeft: "auto", marginRight: 16 }}
+                      />
+        </View>
+      </TouchableOpacity>
     </ImageBackground>
   );
 };
@@ -503,7 +524,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   startText: { fontFamily: 'BenzinSemibold', fontSize: 18, color: '#2D2F5B', textAlign: 'center' },
+
+  buttonText: {
+    color: "#2D2F5C",
+    fontSize: 20,
+    fontFamily: "RegestoGroteskBold",
+  },
+
+  button: {
+    backgroundColor: "#DBF208",
+    marginHorizontal: 16,
+    marginTop: 24,
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#3B472C",
+    flexDirection: "row",
+    position: 'absolute'
+  },
 });
 
 export default Home;
