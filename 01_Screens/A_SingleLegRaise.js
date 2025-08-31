@@ -21,17 +21,31 @@ const A_SingleLegRaise = ({ navigation }) => {
   };
 
   // Seek bar
-  const trackWidth = (width - 40) * 0.8;
+  const trackWidth = (width - 40) * 0.8; // same as before
 
-  const barWidth = progress.interpolate({
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animValue, {
+      toValue: 1,
+      duration: 10000, // 3s for demo
+      easing: Easing.linear, // 👈 force linear
+      useNativeDriver: false, // must be false for width animations
+    }).start();
+  }, []);
+
+  // gradient width grows up to 1/3 of track
+  const barWidth = animValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0%", "80%"],
+    outputRange: [0, trackWidth / 3],
   });
 
-  const dotTranslateX = progress.interpolate({
+  // dot moves up to 1/3 of track
+  const dotTranslateX = animValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, trackWidth],
+    outputRange: [0, trackWidth / 3],
   });
+
 
   // Spin loop
   useEffect(() => {
@@ -52,7 +66,7 @@ const A_SingleLegRaise = ({ navigation }) => {
   const handlePlaybackStatus = (status) => {
     if (status.isLoaded) {
       if (status.didJustFinish) {
-        navigation.replace("A_SingleLegRaises"); // Go to next page
+        navigation.replace("A_SingleLegRaise"); // Go to next page
       } else {
         setIsPlaying(status.isPlaying);
       }
@@ -112,6 +126,7 @@ const A_SingleLegRaise = ({ navigation }) => {
         <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
           <View style={styles.seekBarContainer}>
             <View style={styles.track} />
+            {/* Gradient Fill */}
             <Animated.View style={[styles.progressFill, { width: barWidth }]}>
               <LinearGradient
                 colors={["#DBF208", "#0A78FF"]}
@@ -209,6 +224,7 @@ const styles = StyleSheet.create({
     height: 12,
     width: "80%",
     backgroundColor: "#909090",
+    mixBlendMode:'color-dodge',
     borderRadius: 8,
   },
   progressFill: {
@@ -218,8 +234,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   gradient: {
-    position: 'absolute',
-    top: 600,
+    ...StyleSheet.absoluteFillObject,
     borderRadius: 8,
   },
   dot: { position: "absolute", left: -4 },
