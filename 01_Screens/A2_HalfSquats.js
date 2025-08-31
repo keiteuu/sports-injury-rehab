@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from "react";
 import { View, ImageBackground, StyleSheet, Animated, Image, Dimensions, TouchableOpacity, Text, Easing } from "react-native";
 import { Video } from "expo-av";
 import { LinearGradient } from "expo-linear-gradient";
+import CountdownOverlay from "../01_Screens/CountdownOverlay"; // 👈 import overlay
+
 
 const { width } = Dimensions.get("window");
 
@@ -11,6 +13,8 @@ const A2_HalfSquats = ({ navigation }) => {
   const spinValue = useRef(new Animated.Value(0)).current;
   const [isPlaying, setIsPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(true); // 👈 overlay state
+  const [overlayMode, setOverlayMode] = useState("countdown");
 
   const videoData = {
     src: require("../assets/02_Videos/ExerciseVid/HalfSquats_EtS_1.mp4"),
@@ -20,9 +24,37 @@ const A2_HalfSquats = ({ navigation }) => {
     info: require("../assets/01_Images/ExerciseInfo/HalfSquats.png"),
   };
 
+  // Seek bar
+  const trackWidth = (width - 40) * 0.8; // same as before
+
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  const startSeekBar = () => {
+    animValue.setValue(0); // reset
+    Animated.timing(animValue, {
+      toValue: 1,
+      duration: 10000, // match video length (adjust later)
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  // gradient width grows up to 1/3 of track
+  const barWidth = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, trackWidth / 3],
+  });
+
+  // dot moves up to 1/3 of track
+  const dotTranslateX = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, trackWidth / 3],
+  });
+
+
   // Spin loop
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && !showOverlay) { // 👈 stop spinning when overlay shows
       Animated.loop(
         Animated.timing(spinValue, {
           toValue: 1,
@@ -34,17 +66,31 @@ const A2_HalfSquats = ({ navigation }) => {
     } else {
       spinValue.stopAnimation();
     }
-  }, [isPlaying]);
+  }, [isPlaying, showOverlay]);
 
   const handlePlaybackStatus = (status) => {
     if (status.isLoaded) {
       if (status.didJustFinish) {
-        navigation.replace("A3_WallSits"); // Go to next page
+        setOverlayMode("rest");   // 👈 switch to rest
+        setShowOverlay(true);
       } else {
         setIsPlaying(status.isPlaying);
       }
     }
   };
+
+  const handleCountdownFinish = () => {
+    if (overlayMode === "countdown") {
+      setShowOverlay(false);
+      videoRef.current?.playAsync();
+      startSeekBar();   // 👈 start seek bar only now
+    } else {
+      // REST finished → go to next page
+      setShowOverlay(false);
+      navigation.navigate("A3_WallSits");
+    }
+  };
+
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
@@ -72,18 +118,56 @@ const A2_HalfSquats = ({ navigation }) => {
         source={require("../assets/01_Images/Backgrounds/RYR Bg.png")}
         style={styles.background}
       >
-        {/* Video */}
+
         <View style={styles.videoWrapper}>
+          {/* Gradient background */}
+          <LinearGradient
+            colors={["#000329", "#1625ffff"]} // change these to your gradient colors
+            style={StyleSheet.absoluteFill}
+          />
+
+          {/* Video */}
           <Video
             ref={videoRef}
             source={videoData.src}
             style={styles.video}
             resizeMode="cover"
-            shouldPlay
+            shouldPlay={false}   // 👈 keep paused initially
             isLooping={false}
             isMuted={false}
             onPlaybackStatusUpdate={handlePlaybackStatus}
-          />
+            />
+          </View>
+
+        
+
+        {/* Seek Bar Row */}
+        <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
+          <View style={styles.seekBarContainer}>
+            <View style={styles.track} />
+            {/* Gradient Fill */}
+            <Animated.View style={[styles.progressFill, { width: barWidth }]}>
+              <LinearGradient
+                colors={["#DBF208", "#0A78FF"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.gradient}
+              />
+            </Animated.View>
+            <Animated.View
+              style={[styles.dot, { transform: [{ translateX: dotTranslateX }] }]}
+            >
+              <Image
+                source={require("../assets/01_Images/Person Icon.png")}
+                style={styles.avatar}
+              />
+            </Animated.View>
+          </View>
+
+          {/* END Button */}
+          <View style={styles.endButton}>
+            <Text style={styles.endText}> END </Text>
+          </View>
         </View>
 
         {/* Info */}
@@ -111,6 +195,15 @@ const A2_HalfSquats = ({ navigation }) => {
             <Text style={styles.songArtist}>{videoData.artist}</Text>
           </Animated.View>
         </View>
+
+        {/* Overlay 👇 */}
+        {showOverlay && (
+          <CountdownOverlay
+            mode={overlayMode}
+            onFinish={handleCountdownFinish}
+          />
+        )}
+
       </ImageBackground>
     </View>
   );
@@ -128,12 +221,59 @@ const styles = StyleSheet.create({
   video: { width: "100%", height: "100%" },
   exerciseInfoWrapper: { marginTop: 20, alignItems: "center" },
   exerciseInfo: { width: "95%", height: 164 },
-  recordWrapper: { position: "absolute", top: 48, left: 24, flexDirection: "row", alignItems: "center" },
+  recordWrapper: { position: "absolute", top: 40, left: 20, flexDirection: "row", alignItems: "center" },
   recordContainer: { width: 96, height: 96, justifyContent: "center", alignItems: "center", zIndex: 3, },
   recordIcon: { width: 96, height: 96 },
   songInfo: { position: "absolute", left: 0, backgroundColor: "#FDFDFD", paddingVertical: 8, paddingRight: 32, paddingLeft: 48, borderRadius: 8, borderWidth: 2, borderColor: "#131A3C" },
   songTitle: { color: "#383B73", fontSize: 18, fontFamily: 'BenzinMedium' },
   songArtist: { color: "#383B73", fontSize: 14, marginTop: -2, fontFamily:'RegestoGroteskRegular' },
+  endButton: {
+    borderWidth: 2,
+    borderColor: "#1C2443",
+    backgroundColor: "#DBF208",
+    marginLeft: -60,
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: "center",
+    width: 68,
+    height: 38,
+  },
+  endText: { color: "#383B73", fontFamily: "BenzinSemibold", fontSize: 12 },
+  seekBarContainer: {
+    height: 40,
+    marginTop: 20,
+    marginLeft: 18,
+    width: width - 40,
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  track: {
+    height: 12,
+    width: "80%",
+    backgroundColor: "#909090",
+    mixBlendMode:'color-dodge',
+    borderRadius: 8,
+  },
+  progressFill: {
+    position: "absolute",
+    height: 12,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 8,
+  },
+  dot: { position: "absolute", left: -4 },
+  avatar: { width: 48, height: 48 },
+
+  videoWrapper: {
+    width: "100%",
+    height: 600, // set your desired height
+    overflow: "hidden",
+    borderRadius: 12, // optional
+  },
 });
 
 export default A2_HalfSquats;

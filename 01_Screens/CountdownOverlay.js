@@ -1,140 +1,89 @@
 // CountdownOverlay.js
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
+import { View, Text, StyleSheet, Animated, Dimensions } from "react-native";
 import { Audio } from "expo-av";
 
-const CountdownOverlay = ({ mode = "countdown", onFinish }) => {
-  const [index, setIndex] = useState(0);
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-  const beep = useRef(new Audio.Sound());
+const { height, width } = Dimensions.get("window");
 
-  const countdownValues = ["3", "2", "1", "GO"];
+const CountdownOverlay = ({ onFinish, mode = "countdown" }) => {
+  const [count, setCount] = useState(mode === "countdown" ? 3 : "REST");
+  const slideAnim = useRef(new Animated.Value(height)).current;
 
-  useEffect(() => {
-    if (mode === "countdown") {
-      loadBeep();
-      setIndex(0);
-      runCountdown(0);
-    } else if (mode === "rest") {
-      runRest();
-    }
-
-    return () => {
-      beep.current.unloadAsync();
-    };
-  }, [mode]);
-
-  // Load beep sound
-  const loadBeep = async () => {
-    try {
-      await beep.current.loadAsync(require("../assets/sounds/beep.mp3"));
-    } catch (e) {
-      console.log("Beep load error:", e);
-    }
+  // beep only during countdown
+  const playBeep = async () => {
+    if (mode !== "countdown") return;
+    const { sound } = await Audio.Sound.createAsync(
+      require("../assets/04_Audio/Beep_mixdown2.wav")
+    );
+    await sound.playAsync();
   };
 
-  // Countdown animation
-  const runCountdown = (i) => {
-    if (i >= countdownValues.length) {
-      onFinish?.();
-      return;
-    }
-
-    slideAnim.setValue(300); // start below
-    opacity.setValue(0);
-
-    Animated.sequence([
-      Animated.parallel([
+  const animateSlide = () => {
+    slideAnim.setValue(height);
+    Animated.timing(slideAnim, {
+      toValue: height / 2 - 500, // slide to middle
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      setTimeout(() => {
         Animated.timing(slideAnim, {
-          toValue: 0,
+          toValue: height /2  - 1500, // slide out
           duration: 500,
           useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.delay(100), // ensure visibility
-      Animated.call([], async () => {
-        try {
-          await beep.current.replayAsync();
-        } catch {}
-      }),
-      Animated.delay(400),
-      Animated.parallel([
-        Animated.timing(slideAnim, {
-          toValue: -300, // slide out up
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start(() => {
-      setIndex(i + 1);
-      setTimeout(() => runCountdown(i + 1), 200);
+        }).start(() => {
+          if (mode === "countdown") {
+            if (count > 1) {
+              setCount((prev) => prev - 1);
+            } else if (count === 1) {
+              setCount("GO");
+            } else {
+              onFinish?.();
+            }
+          } else {
+            // REST mode, finish after showing once
+            onFinish?.();
+          }
+        });
+      }, 400);
     });
   };
 
-  // Rest animation
-  const runRest = () => {
-    opacity.setValue(0);
-    Animated.sequence([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.delay(3000), // "REST" stays for 3 sec
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-    ]).start(() => onFinish?.());
-  };
+
+  useEffect(() => {
+    playBeep();
+    animateSlide();
+  }, [count]);
 
   return (
     <View style={styles.overlay}>
-      {mode === "countdown" && index < countdownValues.length && (
-        <Animated.Text
-          style={[
-            styles.countdownText,
-            { opacity, transform: [{ translateY: slideAnim }] },
-          ]}
-        >
-          {countdownValues[index]}
-        </Animated.Text>
-      )}
-      {mode === "rest" && (
-        <Animated.Text style={[styles.countdownText, { opacity }]}>
-          REST
-        </Animated.Text>
-      )}
+      <Animated.Text
+        style={[
+          styles.countText,
+          { transform: [{ translateY: slideAnim }] },
+        ]}
+      >
+        {count}
+      </Animated.Text>
     </View>
   );
 };
 
-export default CountdownOverlay;
-
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.6)", // dark overlay
+    backgroundColor: "#00032980",
+
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 99,
+    zIndex: 999,
   },
-  countdownText: {
-    fontSize: 72,
-    fontWeight: "bold",
-    color: "#FFF94C",
+  countText: {
+    fontSize: 108,
+    color: "#DBF208",
+    fontFamily: "BenzinSemibold",
     textAlign: "center",
+    
   },
 });
+
+export default CountdownOverlay;
