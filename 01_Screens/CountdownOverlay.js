@@ -22,7 +22,7 @@ const CountdownOverlay = ({ onFinish, mode = "countdown" }) => {
     slideAnim.setValue(height);
     Animated.timing(slideAnim, {
       toValue: height / 2 - 500, // slide to middle
-      duration: 500,
+      duration: 200,
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {

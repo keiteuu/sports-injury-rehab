@@ -15,6 +15,7 @@ import ReelOptions from "./01_Screens/ReelOptions";
 import A_SingleLegRaise from "./01_Screens/A_SingleLegRaise";
 import A2_HalfSquats from "./01_Screens/A2_HalfSquats";
 import A3_WallSits from './01_Screens/A3_WallSits';
+import WellDone from './01_Screens/WellDone';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,7 @@ export default function App() {
         <Stack.Screen name="A_SingleLegRaise" component={A_SingleLegRaise} />
         <Stack.Screen name="A2_HalfSquats" component={A2_HalfSquats} />
         <Stack.Screen name="A3_WallSits" component={A3_WallSits} />
+        <Stack.Screen name="WellDone" component={WellDone} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

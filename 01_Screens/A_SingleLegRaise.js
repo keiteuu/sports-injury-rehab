@@ -134,7 +134,7 @@ const A_SingleLegRaise = ({ navigation }) => {
   // Second dot moves across 3/8 of the track
   const secondDotTranslateX = animValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.5, (trackWidth * 3) / 8],
+    outputRange: [0.7, (trackWidth * 4) / 8],
   });
 
   // Animate spin (React Native Animated)
@@ -168,7 +168,7 @@ const A_SingleLegRaise = ({ navigation }) => {
     } else {
       // REST finished → go to next page
       setShowOverlay(false);
-      navigation.navigate("sdf");
+      navigation.navigate("A2_HalfSquats");
     }
   };
 
@@ -303,7 +303,7 @@ const A_SingleLegRaise = ({ navigation }) => {
                   const centerX = fabX - 24 + offsetX;
                   const centerY = fabY - 24 + offsetY;
 
-                  triggerReaction(require("../assets/01_Images/Icons/Direct/Type=Hearts.png"), centerX, centerY );
+                  triggerReaction(require("../assets/01_Images/Icons/Direct/Floating/Hearts.png"), centerX, centerY );
                 });
               }}
             >
@@ -328,7 +328,7 @@ const A_SingleLegRaise = ({ navigation }) => {
 
                   const centerX = fabX - 24 + offsetX;
                   const centerY = fabY - 24 + offsetY;
-                  triggerReaction(require("../assets/01_Images/Icons/Direct/Type=Ballloons.png"), centerX, centerY);
+                  triggerReaction(require("../assets/01_Images/Icons/Direct/Floating/Balloon.png"), centerX, centerY);
                 });
               }}
             >
@@ -353,7 +353,7 @@ const A_SingleLegRaise = ({ navigation }) => {
 
                   const centerX = fabX - 24 + offsetX;
                   const centerY = fabY - 24 + offsetY;
-                  triggerReaction(require("../assets/01_Images/Icons/Direct/Type=Cheer.png"), centerX, centerY);
+                  triggerReaction(require("../assets/01_Images/Icons/Direct/Floating/Cheer.png"), centerX, centerY);
                 });
               }}
             >
@@ -378,7 +378,7 @@ const A_SingleLegRaise = ({ navigation }) => {
 
                   const centerX = fabX - 24 + offsetX;
                   const centerY = fabY - 24 + offsetY;
-                  triggerReaction(require("../assets/01_Images/Icons/Direct/Type=Clap.png"), centerX, centerY);
+                  triggerReaction(require("../assets/01_Images/Icons/Direct/Floating/Clap.png"), centerX, centerY);
                 });
               }}
             >
@@ -529,6 +529,7 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "#909090",
     borderRadius: 8,
+    mixBlendMode: 'color-dodge'
   },
   progressFill: {
     position: "absolute",
