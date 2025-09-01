@@ -446,10 +446,14 @@ const A_SingleLegRaise = ({ navigation }) => {
             </RNAnimated.View>
           </View>
 
+          {/* end button has a navigation to welldone */}
           {/* END Button */}
+          <TouchableOpacity onPress={() => navigation.navigate('WellDone')} activeOpacity={1}>
           <View style={styles.endButton}>
             <Text style={styles.endText}> END </Text>
+            
           </View>
+          </TouchableOpacity>
         </View>
 
         {/* Info */}

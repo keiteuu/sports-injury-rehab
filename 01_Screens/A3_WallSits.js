@@ -169,7 +169,7 @@ const A3_WallSits = ({ navigation }) => {
       // REST finished → go to next page
       setShowOverlay(false);
       setTimeout(() => {
-        navigation.getParent()?.navigate("WellDone");
+        navigation.navigate("WellDone"); // 👈 direct navigation
       }, 0);
     }
   };
