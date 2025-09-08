@@ -4,6 +4,8 @@ import { View, Image, StyleSheet, Animated, Text } from "react-native";
 import Home from "../01_Screens/Home";
 import Disrecovery from "../01_Screens/Disrecovery";
 import Profile from "../01_Screens/Profile";
+import { CommonActions } from "@react-navigation/native";
+
 
 const Tab = createBottomTabNavigator();
 

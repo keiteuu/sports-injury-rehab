@@ -6,9 +6,11 @@ import {
   ActivityIndicator,
   ImageBackground,
   Image
+, Dimensions,
 } from "react-native";
 
 const Profile = ({ navigation }) => {
+const { width } = Dimensions.get("window");
 
   return (
     <ImageBackground
@@ -16,15 +18,16 @@ const Profile = ({ navigation }) => {
           style={styles.background}
           resizeMode="cover"
         >
-      <View>
+      <View >
         <Image
           source={require('../assets/01_Images/Top Gradient.png')}
           style={{position: 'absolute',  }}/>
 
-          <View>
-            <Image
+          <View  style={{justifyContent: 'center',alignItems: 'center'}}>
+           <Image
             source={require('../assets/01_Images/Profile.png')}
-            style={{marginTop: 24, marginHorizontal: 16, width: '92%', height:'48%', resizeMode:'contain',  }}/>
+            style={{justifyContent:'center',alignItems: 'center', width: width-32, resizeMode: 'contain', marginTop: -56, }}/>
+          
 
               </View>
               <View>
@@ -33,7 +36,7 @@ const Profile = ({ navigation }) => {
                 </Text>
                 <Image
                 source={require('../assets/01_Images/Friend List.png')}
-                style={{marginTop: 24, marginHorizontal: 16, width: '92%', height:'48%', resizeMode:'contain',  }}/>
+                style={{ marginHorizontal: 15, width: width-32, resizeMode: 'contain', marginTop: -200,}}/>
               </View>
             
           </View>
@@ -50,8 +53,7 @@ const styles = StyleSheet.create({
     fontFamily: "BenzinSemibold",
     fontSize: 18,
     marginLeft: 16,
-    marginVertical: 12,
-    marginBottom: 16,
+    marginTop: -56,
   },
 });
 

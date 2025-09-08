@@ -4,13 +4,14 @@
     "slug": "SportsInjuryRehabilitation",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "../assets/00_RandomImages/splash-icon.png",
+    "icon": "./assets/00_RandomImages/Landin.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "../assets/00_RandomImages/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/01_Images/Backgrounds/Landing Page.png",
+      "backgroundColor": "#ffffff",
+      "resizeMode": "cover"
+
     },
     "ios": {
       "supportsTablet": true
@@ -29,6 +30,12 @@
     "plugins": [
       "expo-font",
       "expo-video"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "057fb4fa-ef82-477d-9fc9-49f03f713d15"
+      }
+    },
+    "owner": "keiteuu"
   }
 }

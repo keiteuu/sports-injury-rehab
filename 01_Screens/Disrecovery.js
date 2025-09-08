@@ -13,6 +13,7 @@ import {
 import { VideoView, useVideoPlayer } from "expo-video";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 const VIDEO_ITEM_WIDTH = width * 0.5;
@@ -42,14 +43,15 @@ export default function Disrecovery() {
   );
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (!isFocusedRef.current) return; // Only play/pause when focused
     players.forEach((p, idx) => {
-      if (viewableItems.some((vi) => vi.index === idx && vi.isViewable)) {
-        p.play();
-      } else {
-        p.pause();
-      }
+    if (viewableItems.some((vi) => vi.index === idx && vi.isViewable)) {
+      p.play();
+    } else {
+      p.pause();
+    }
     });
-  }).current;
+    }).current;
 
   // Images
   const images = [
@@ -59,6 +61,36 @@ export default function Disrecovery() {
     require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options-3.png"),
     require("../assets/01_Images/Exercise Carousel/Rehab Exercise Options-4.png"),
   ];
+
+  const isFocused = useIsFocused();
+  const isFocusedRef = useRef(isFocused);
+  
+React.useEffect(() => {
+  isFocusedRef.current = isFocused;
+  if (!isFocused) {
+    // Pause all videos when navigating away
+    players.forEach((p) => p.pause());
+  }
+}, [isFocused]);
+  // React.useEffect(()=>{
+  //   if(!isFocused && players){
+  //     players.forEach((p, idx) => {
+  //        p.pause();
+  //     });
+  //   }
+  //   else
+  //   {
+  //     players.forEach((p, idx) => {
+  //     if (onViewableItemsChanged.some((vi) => vi.index === idx && vi.isViewable)) {
+  //       p.play();
+  //     }
+  //   })
+  //     //  players.forEach((p, idx) => {
+  //     //    p.play();
+  //     // });
+  //   }
+  
+  // },[isFocused, players]);
 
   return (
     <ImageBackground

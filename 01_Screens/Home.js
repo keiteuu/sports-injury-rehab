@@ -11,9 +11,12 @@ import {
   Animated,
   Modal,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+const { width } = Dimensions.get("window");
+
 
 const Home = () => {
   const navigation = useNavigation();
@@ -22,6 +25,24 @@ const Home = () => {
   const rotateAnim = useRef(new Animated.Value(0)).current; // arrow
   const dropdownAnim = useRef(new Animated.Value(0)).current; // height
   const [open, setOpen] = useState(false);
+
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  React.useEffect(() => {
+  Animated.loop(
+    Animated.sequence([
+      Animated.timing(floatAnim, {
+        toValue: -12, // 👈 move up
+        duration: 1200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(floatAnim, {
+        toValue: 0, // 👈 move back down
+        duration: 1200,
+        useNativeDriver: true,
+      }),
+    ])
+  ).start();
+}, []);
 
   const toggleDropdown = () => {
     const toValue = open ? 0 : 1;
@@ -38,6 +59,8 @@ const Home = () => {
       duration: 300,
       useNativeDriver: false,
     }).start();
+
+    expandModal(!open); // 👈 expand/shrink modal frame
   };
 
   const rotateInterpolate = rotateAnim.interpolate({
@@ -50,6 +73,7 @@ const Home = () => {
     outputRange: [0, 124], // adjust expanded height
   });
 
+  
   // --- Animations for D5 ---
   const scaleD5 = useRef(new Animated.Value(1)).current;
   const modalTranslateXD5 = useRef(
@@ -68,7 +92,17 @@ const Home = () => {
   const scaleClose = useRef(new Animated.Value(1)).current;
   const scaleStart = useRef(new Animated.Value(1)).current;
 
-  
+  // --- Animated height for D5 modal ---
+  const modalHeightAnim = useRef(new Animated.Value(400)).current; // default closed height
+
+  const expandModal = (expand) => {
+    Animated.timing(modalHeightAnim, {
+      toValue: expand ? 524 : 400, // expand with dropdown
+      duration: 300,
+      useNativeDriver: false, // height can’t use native driver
+    }).start();
+  };
+
 
   return (
     <ImageBackground
@@ -79,9 +113,8 @@ const Home = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.imageWrapper}>
           <Image
-            source={require('../assets/01_Images/Recovery Roadmap 2.png')}
+            source={require("../assets/01_Images/Recovery Roadmap.png")}
             style={styles.roadmap}
-            resizeMode="contain"
           />
 
           
@@ -162,6 +195,13 @@ const Home = () => {
           </Modal>
 
           {/* --- Tile D5 --- */}
+          <Animated.Image
+            source={require("../assets/01_Images/TodayFloat.png")} // 👈 replace with your image
+            style={[
+              styles.floatingImage,
+              { transform: [{ translateY: floatAnim }] },
+            ]}
+          />
           <Pressable
             onPress={() => {
               setIsModalVisibleD5(true);
@@ -205,15 +245,15 @@ const Home = () => {
 
               <Animated.View
                 style={[
-                  styles.modalContentWrapper,
-                  { transform: [{ translateX: modalTranslateXD5 }] },
+                  styles.modalImageWrapper,
+                  { height: modalHeightAnim, marginBottom: 40 }
                 ]}
               >
                 {/* Background Image with margin 40 */}
                 <ImageBackground
                   source={require('../assets/01_Images/D5MenuBG.png')}
                   style={styles.modalImage}
-                  resizeMode="contain"
+                  resizeMode="stretch"
                 >
                   {/* Inner container */}
                   <View style={styles.modalInnerContainer}>
@@ -230,7 +270,7 @@ const Home = () => {
                     >
                       <Image
                         source={require('../assets/01_Images/Day 5.png')}
-                        style={{ height: 30, resizeMode: 'contain', marginLeft: -80 }}
+                        style={{ height: 30, resizeMode: 'contain', marginLeft: -62 }}
                       />
 
                       <Pressable
@@ -473,13 +513,24 @@ const styles = StyleSheet.create({
   background: { flex: 1 },
   scrollContainer: { alignItems: 'center', paddingBottom: 20 },
   imageWrapper: { position: 'relative', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' },
-  roadmap: { width: 420, height: 1350, marginBottom: 72 },
-  tileTouchableD5: { position: 'absolute', top: 738, left: '14.5%', zIndex: 3 },
-  tileTouchableD4: { position: 'absolute', top: 840, left: '35.5%', zIndex: 3 },
-  tile: { width: 141, resizeMode: 'contain' },
+  roadmap: {
+  width: width,        // 👈 fills horizontally
+  height: undefined,   // 👈 lets height scale automatically
+  aspectRatio: 420 / 1400, // 👈 keep proportions of your original image
+  marginBottom: 72,
+},
+  tileTouchableD5: { position: 'absolute', top: 776, left: '43.5%', zIndex: 3, },
+  tileTouchableD4: { position: 'absolute', top: 887, left: '55.5%', zIndex: 3 },
+  tile: { width: 127, resizeMode: 'contain' },
   modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  modalContentWrapper: { alignItems: 'center', justifyContent: 'center' },
-  modalImage: { width: Dimensions.get('window').width- 40, height: 516, marginHorizontal: 40, alignItems: 'center' },
+  modalImageWrapper: {
+    width: Dimensions.get('window').width - 40,
+    marginHorizontal: 40,
+    overflow: "hidden",
+    borderRadius: 12,
+  },
+  modalImage: { flex: 1,   // 👈 allow stretching with parent
+  width: "100%", },
   modalInnerContainer: { flex: 1 },
   
 
@@ -489,7 +540,7 @@ const styles = StyleSheet.create({
     width: 37,
     height: 37,      // keep square ratio
     resizeMode: 'contain',
-    marginLeft: 10,  // small spacing from the Day 5 image if needed },
+    marginRight: 8  // small spacing from the Day 5 image if needed },
   },
 
   closeButtonD4: { width: 37, resizeMode: 'contain', position:'absolute', top: -512, left: '30.5%',  },
@@ -545,6 +596,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: 'absolute'
   },
+
+  floatingImage: {
+  position: "absolute",
+  top: 785,   // 👈 slightly above D5 tile (since your D5 is at top: 776)
+  left: "39%", 
+  width: 160,
+  height: 64,
+  resizeMode: "contain",
+  zIndex: 5,
+},
 });
 
 export default Home;
