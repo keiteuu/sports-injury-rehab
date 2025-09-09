@@ -533,6 +533,14 @@ const styles = StyleSheet.create({
   width: "100%", },
   modalInnerContainer: { flex: 1 },
   
+  modalContentWrapper: {
+    width: Dimensions.get('window').width - 40,
+    height: 524, // 👈 give height so it’s visible
+    marginHorizontal: 20,
+    overflow: "hidden",
+    borderRadius: 12,
+
+  }, // 👈 temp debug (remove later if you want transparent)
 
   closeTileD5Touchable: { marginLeft: 10 },
   closeButtonD5: 
@@ -543,7 +551,13 @@ const styles = StyleSheet.create({
     marginRight: 8  // small spacing from the Day 5 image if needed },
   },
 
-  closeButtonD4: { width: 37, resizeMode: 'contain', position:'absolute', top: -512, left: '30.5%',  },
+  closeButtonD4: {
+  width: 37,
+  resizeMode: 'contain',
+  position:'absolute',
+  top: -517,
+  left: '84%',
+},
   
   innerBar: {
     backgroundColor: '#FDFDFD',
