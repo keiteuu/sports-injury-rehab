@@ -127,7 +127,7 @@ React.useEffect(() => {
           </View>
           <TouchableOpacity
             style={styles.moreButton}
-            onPress={() => navigation.navigate("ReelOptions")}
+            // onPress={() => navigation.navigate("ReelOptions")}
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>
@@ -206,7 +206,7 @@ React.useEffect(() => {
           </View>
           <TouchableOpacity
             style={styles.moreButton}
-            onPress={() => navigation.navigate("ReelOptions")}
+            // onPress={() => navigation.navigate("ReelOptions")}
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>

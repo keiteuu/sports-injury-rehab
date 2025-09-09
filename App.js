@@ -16,6 +16,11 @@ import A_SingleLegRaise from "./01_Screens/A_SingleLegRaise";
 import A2_HalfSquats from "./01_Screens/A2_HalfSquats";
 import A3_WallSits from './01_Screens/A3_WallSits';
 import WellDone from './01_Screens/WellDone';
+import LandingPage from './01_Screens/LandingPage';
+import Onboarding1 from './01_Screens/Onboarding1';
+import Onboarding2 from './01_Screens/Onboarding2';
+import Onboarding3 from './01_Screens/Onboarding3';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -51,7 +56,13 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator
+            initialRouteName="LandingPage"
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",   // 👈 fade transition between pages
+            }}
+          >
         {/* Tabs stay as your main navigation */}
         <Stack.Screen name="Tabs" component={Tabs} />
 
@@ -61,6 +72,10 @@ export default function App() {
         <Stack.Screen name="A2_HalfSquats" component={A2_HalfSquats} />
         <Stack.Screen name="A3_WallSits" component={A3_WallSits} />
         <Stack.Screen name="WellDone" component={WellDone} />
+        <Stack.Screen name="LandingPage" component={LandingPage} />
+        <Stack.Screen name="Onboarding1" component={Onboarding1} />
+        <Stack.Screen name="Onboarding2" component={Onboarding2} />
+        <Stack.Screen name="Onboarding3" component={Onboarding3} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
@@ -68,3 +83,4 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({});
+
