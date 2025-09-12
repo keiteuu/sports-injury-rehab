@@ -72,25 +72,6 @@ React.useEffect(() => {
     players.forEach((p) => p.pause());
   }
 }, [isFocused]);
-  // React.useEffect(()=>{
-  //   if(!isFocused && players){
-  //     players.forEach((p, idx) => {
-  //        p.pause();
-  //     });
-  //   }
-  //   else
-  //   {
-  //     players.forEach((p, idx) => {
-  //     if (onViewableItemsChanged.some((vi) => vi.index === idx && vi.isViewable)) {
-  //       p.play();
-  //     }
-  //   })
-  //     //  players.forEach((p, idx) => {
-  //     //    p.play();
-  //     // });
-  //   }
-  
-  // },[isFocused, players]);
 
   return (
     <ImageBackground
@@ -98,6 +79,10 @@ React.useEffect(() => {
       style={styles.background}
       resizeMode="cover"
     >
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Dis(Re)Covery</Text>
+      </View>
+
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Image
               source={require('../assets/01_Images/Top Gradient.png')}
@@ -127,7 +112,7 @@ React.useEffect(() => {
           </View>
           <TouchableOpacity
             style={styles.moreButton}
-            // onPress={() => navigation.navigate("ReelOptions")}
+            onPress={() => navigation.navigate("ReelOptions")}
           >
             <Text style={styles.moreText}>MORE</Text>
           </TouchableOpacity>
@@ -353,4 +338,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   moreText: { color: "#fdfdfd", fontFamily: "BenzinMedium", fontSize: 12 },
+
+  header: {
+    height: 93, // match Profile/Home
+    backgroundColor: "#383B73",
+    borderBottomWidth: 2,
+    borderBottomColor: "#222345",
+    justifyContent: "flex-end",
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+  },
+  headerTitle: {
+    fontFamily: "RegestoGroteskBold",
+    fontSize: 20,
+    color: "#FFF94C",
+    paddingLeft:16,
+    marginBottom: 4,
+  },
 });

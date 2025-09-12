@@ -14,7 +14,7 @@ export default function Onboarding1() {
       Animated.timing(fadeAnim, {
         toValue: 1,        // fully visible
         duration: 600,     // fade in duration
-        useNativeDriver: true,s
+        useNativeDriver: true,
       }).start();
     }, 1000); // wait 2 seconds before fading in
 

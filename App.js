@@ -20,6 +20,7 @@ import LandingPage from './01_Screens/LandingPage';
 import Onboarding1 from './01_Screens/Onboarding1';
 import Onboarding2 from './01_Screens/Onboarding2';
 import Onboarding3 from './01_Screens/Onboarding3';
+import ReelPlayer from './01_Screens/ReelPlayer';
 
 
 const Stack = createNativeStackNavigator();
@@ -76,6 +77,7 @@ export default function App() {
         <Stack.Screen name="Onboarding1" component={Onboarding1} />
         <Stack.Screen name="Onboarding2" component={Onboarding2} />
         <Stack.Screen name="Onboarding3" component={Onboarding3} />
+        <Stack.Screen name="ReelPlayer" component={ReelPlayer} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

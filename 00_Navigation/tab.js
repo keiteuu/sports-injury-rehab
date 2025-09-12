@@ -5,6 +5,8 @@ import Home from "../01_Screens/Home";
 import Disrecovery from "../01_Screens/Disrecovery";
 import Profile from "../01_Screens/Profile";
 import { CommonActions } from "@react-navigation/native";
+import { DisrecoveryStackScreen } from "../00_Navigation/DisrecoveryStack"; 
+
 
 
 const Tab = createBottomTabNavigator();
@@ -165,7 +167,7 @@ export default function Tabs() {
 
       <Tab.Screen
         name="Dis(Re)Covery"
-        component={Disrecovery}
+        component={DisrecoveryStackScreen} // 👈 use your stack here
         options={{
           tabBarIcon: ({ focused }) => (
             <AnimatedIcon
@@ -174,25 +176,8 @@ export default function Tabs() {
               offIcon={require("../assets/01_Images/NavBarIcons/RediscoveryOff.png")}
             />
           ),
-          headerShown: true,
-          headerBackground: () => (
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "#383B73",
-                borderBottomWidth: 2,
-                borderBottomColor: "#222345",
-              }}
-            />
-          ),
-          headerTitleStyle: {
-            fontFamily: "RegestoGroteskBold",
-            fontSize: 20,
-            paddingLeft: 16,
-            color: "#FFF94C",
-          },
           unmountOnBlur: true,
-          
+          headerShown: false, // 👈 stack handles headers now
         }}
       />
 
@@ -208,7 +193,7 @@ export default function Tabs() {
             />
           ),
           headerShown: true,
-          headerStyle: { flex: 1,
+          headerStyle: {
                 backgroundColor: "#383B73",
                 borderBottomWidth: 2,
                 borderBottomColor: "#222345", },
